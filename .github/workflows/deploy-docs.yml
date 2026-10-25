@@ -1,7 +1,7 @@
 name: Deploy docs
 
 # Builds the Docusaurus site in docs/ and publishes it via the GitHub Pages
-# deployment API, served at https://jamyn.github.io/dispatch/. No gh-pages
+# deployment API, served at https://helldweller.github.io/dispatch/. No gh-pages
 # branch or git commit is involved, so the repo-wide required-signatures
 # ruleset (which a git-pushed gh-pages commit can never satisfy) doesn't apply.
 on:

@@ -5,4 +5,4 @@
 # Note the syntax: CODEOWNERS entries need a path pattern and an @-prefixed
 # owner. The previous contents were bare usernames with neither, which GitHub
 # silently ignores, so this file was not actually assigning reviewers at all.
-* @Jamyn
+* @helldweller

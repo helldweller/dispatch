@@ -31,4 +31,4 @@ If applicable, add screenshots to help explain your problem.
 **Additional context**
 Add any other context about the problem here.
 
-> Suspected security vulnerability? Please don't file it here — see [SECURITY.md](https://github.com/Jamyn/dispatch/blob/main/SECURITY.md).
+> Suspected security vulnerability? Please don't file it here — see [SECURITY.md](https://github.com/helldweller/dispatch/blob/main/SECURITY.md).

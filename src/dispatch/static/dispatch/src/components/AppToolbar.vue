@@ -51,7 +51,7 @@
               append-icon="mdi-open-in-new"
             />
             <v-list-item
-              href="https://jamyn.github.io/dispatch/"
+              href="https://helldweller.github.io/dispatch/"
               target="_blank"
               title="App Documentation"
               append-icon="mdi-open-in-new"

@@ -163,11 +163,11 @@ slack_conversation = "dispatch.plugins.dispatch_slack.plugin:SlackConversationPl
 zoom_conference = "dispatch.plugins.dispatch_zoom.plugin:ZoomConferencePlugin"
 
 [project.urls]
-Homepage = "https://github.com/Jamyn/dispatch"
-Documentation = "https://jamyn.github.io/dispatch/"
-Repository = "https://github.com/Jamyn/dispatch"
-Issues = "https://github.com/Jamyn/dispatch/issues"
-Changelog = "https://github.com/Jamyn/dispatch/releases"
+Homepage = "https://github.com/helldweller/dispatch"
+Documentation = "https://helldweller.github.io/dispatch/"
+Repository = "https://github.com/helldweller/dispatch"
+Issues = "https://github.com/helldweller/dispatch/issues"
+Changelog = "https://github.com/helldweller/dispatch/releases"
 
 [tool.hatch.version]
 source = "versioningit"
