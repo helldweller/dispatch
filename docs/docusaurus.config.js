@@ -12,14 +12,14 @@ const config = {
   favicon: "img/favicon.ico",
 
   // Set the production url of your site here
-  url: "https://jamyn.github.io/",
+  url: "https://helldweller.github.io/",
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: "/dispatch",
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: "jamyn", // Usually your GitHub org/user name.
+  organizationName: "helldweller", // Usually your GitHub org/user name.
   projectName: "dispatch", // Usually your repo name.
   trailingSlash: false,
 
@@ -64,7 +64,7 @@ const config = {
         docs: {
           sidebarPath: require.resolve("./sidebars.js"),
           editUrl: ({ docPath }) =>
-            `https://github.com/Jamyn/dispatch/edit/main/docs/docs/${docPath}`,
+            `https://github.com/helldweller/dispatch/edit/main/docs/docs/${docPath}`,
         },
         // This site has no blog/ directory. Docusaurus 2 emitted nothing for the
         // preset's default-on blog; v3 emits an empty /blog index page instead.
@@ -111,7 +111,7 @@ const config = {
           },
 
           {
-            href: "https://github.com/Jamyn/dispatch",
+            href: "https://github.com/helldweller/dispatch",
             position: "right",
             className: "header-github-link",
             "aria-label": "GitHub repository",

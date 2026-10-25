@@ -105,7 +105,7 @@ Bug reports and feature requests for the application belong in this repo's
 issue tracker. Deployment/Compose/installer issues belong in
 [`Jamyn/dispatch-docker`](https://github.com/Jamyn/dispatch-docker/issues).
 Suspected vulnerabilities should go through
-[GitHub security advisories](https://github.com/Jamyn/dispatch/security/advisories/new)
+[GitHub security advisories](https://github.com/helldweller/dispatch/security/advisories/new)
 instead of a public issue.
 
 ## Code of Conduct

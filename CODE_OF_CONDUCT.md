@@ -55,9 +55,9 @@ spaces.
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may be
 reported to the maintainer by opening a
-[private security advisory](https://github.com/Jamyn/dispatch/security/advisories/new)
+[private security advisory](https://github.com/helldweller/dispatch/security/advisories/new)
 or, for non-security conduct reports, by contacting
-[@Jamyn](https://github.com/Jamyn) directly through GitHub. All complaints
+[@helldweller](https://github.com/helldweller) directly through GitHub. All complaints
 will be reviewed and investigated promptly and fairly.
 
 Maintainers are obligated to respect the privacy and security of the reporter

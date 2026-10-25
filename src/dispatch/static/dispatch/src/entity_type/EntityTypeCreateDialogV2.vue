@@ -75,7 +75,7 @@
                 variant="plain"
                 target="_blank"
                 size="small"
-                href="https://jamyn.github.io/dispatch/docs/administration/settings/signal/entity-type"
+                href="https://helldweller.github.io/dispatch/docs/administration/settings/signal/entity-type"
               />
             </template>
           </DTooltip>
