@@ -35,9 +35,12 @@ jobs:
     # GitHub's documented way out: it runs in the base repo's context with the
     # permissions above. That context is also why nothing below may execute
     # code from the PR -- see --ignore-scripts on the regenerate step.
+    # Compare repositories, not `head.repo.fork`: that flag is true for every
+    # branch of a repository that is itself a fork, which would skip this job
+    # on all of Dependabot's PRs there.
     if: >-
       github.event.pull_request.user.login == 'dependabot[bot]' &&
-      !github.event.pull_request.head.repo.fork
+      github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
