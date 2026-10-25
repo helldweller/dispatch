@@ -1,6 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <!--
+      Vuetify 4 puts every style in a cascade layer, and the browser ranks layers
+      by first appearance. Vite links the split CSS chunks (VApp-*.css, VContainer-*.css)
+      before index-*.css, and those open @layer vuetify-components first, which puts
+      vuetify-core above it: the `* { padding: 0 }` reset in vuetify-md2-compat.css
+      then beats every component rule, and v-main loses its app-bar and drawer offsets.
+      Declaring the order here, before any stylesheet, pins it to the one Vuetify documents.
+    -->
+    <style>
+      @layer vuetify-core, vuetify-components, vuetify-overrides, vuetify-utilities, vuetify-final;
+    </style>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
