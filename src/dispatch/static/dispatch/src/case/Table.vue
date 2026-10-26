@@ -9,7 +9,7 @@
       <escalate-dialog />
       <delete-dialog />
       <v-col>
-        <div class="text-h5">Cases</div>
+        <div class="text-h5">{{ $t("Cases") }}</div>
       </v-col>
       <v-col class="text-right">
         <table-filter-dialog :projects="defaultUserProjects" />
@@ -23,7 +23,7 @@
           hide-details
         >
           <v-icon start color="white">mdi-shield-search</v-icon>
-          <span class="text-uppercase text-body-2 font-weight-bold">Report case</span>
+          <span class="text-uppercase text-body-2 font-weight-bold">{{ $t("Report case") }}</span>
         </v-btn>
         <v-btn
           v-if="userAdminOrAbove(currentUserRole)"
@@ -42,7 +42,7 @@
             <v-text-field
               v-model="q"
               append-inner-icon="mdi-magnify"
-              label="Search"
+              :label="$t('Search')"
               single-line
               hide-details
               clearable
@@ -56,7 +56,7 @@
             :items-length="total || 0"
             :loading="loading"
             v-model="selected"
-            loading-text="Loading... Please wait"
+            :loading-text="$t('Loading... Please wait')"
             :sort-by="['reported_at']"
             :items-per-page="itemsPerPage"
             @click:row="showCasePage"
@@ -120,7 +120,7 @@
                       params: { name: item.name },
                     }"
                   >
-                    <v-list-item-title>View</v-list-item-title>
+                    <v-list-item-title>{{ $t("View") }}</v-list-item-title>
                   </v-list-item>
                   <v-list-item
                     :to="{
@@ -128,22 +128,22 @@
                       params: { name: item.name },
                     }"
                   >
-                    <v-list-item-title>Edit</v-list-item-title>
+                    <v-list-item-title>{{ $t("Edit") }}</v-list-item-title>
                   </v-list-item>
                   <v-list-item
                     @click="showRun({ type: 'case', data: item })"
                     :disabled="item.status == 'Escalated' || item.status == 'Closed'"
                   >
-                    <v-list-item-title>Run Workflow</v-list-item-title>
+                    <v-list-item-title>{{ $t("Run Workflow") }}</v-list-item-title>
                   </v-list-item>
                   <v-list-item
                     @click="showEscalateDialog(item)"
                     :disabled="item.status == 'Escalated' || item.status == 'Closed'"
                   >
-                    <v-list-item-title>Escalate</v-list-item-title>
+                    <v-list-item-title>{{ $t("Escalate") }}</v-list-item-title>
                   </v-list-item>
                   <v-list-item @click="showDeleteDialog(item)">
-                    <v-list-item-title>Delete</v-list-item-title>
+                    <v-list-item-title>{{ $t("Delete") }}</v-list-item-title>
                   </v-list-item>
                 </v-list>
               </v-menu>
@@ -160,6 +160,7 @@
 import { ref, computed, watch } from "vue"
 import { useStore } from "vuex"
 import { useRoute, useRouter } from "vue-router"
+import { useI18n } from "vue-i18n"
 import { formatRelativeDate, formatDate } from "@/filters"
 
 import BulkEditSheet from "@/case/BulkEditSheet.vue"
@@ -176,6 +177,7 @@ import RouterUtils from "@/router/utils"
 import TableExportDialog from "@/case/TableExportDialog.vue"
 import TableFilterDialog from "@/case/TableFilterDialog.vue"
 
+const { t } = useI18n()
 const store = useStore()
 const router = useRouter()
 const route = useRoute()
@@ -221,17 +223,17 @@ const showCasePage = (e, { item }) => {
 
 function loadHeaders() {
   return [
-    { title: "Name", value: "name", align: "left", width: "10%" },
-    { title: "Title", value: "title", sortable: false },
-    { title: "Status", value: "status" },
-    { title: "Type", value: "case_type.name", sortable: true },
-    { title: "Severity", value: "case_severity.name", sortable: true },
-    { title: "Priority", value: "case_priority.name", sortable: true },
-    { title: "Project", value: "project.display_name", sortable: true },
-    { title: "Assignee", value: "assignee", sortable: false },
-    { title: "Cost", key: "case_costs", sortable: false },
-    { title: "Reported At", value: "reported_at", sortable: true },
-    { title: "Closed At", value: "closed_at", sortable: true },
+    { title: t("Name"), value: "name", align: "left", width: "10%" },
+    { title: t("Title"), value: "title", sortable: false },
+    { title: t("Status"), value: "status" },
+    { title: t("Type"), value: "case_type.name", sortable: true },
+    { title: t("Severity"), value: "case_severity.name", sortable: true },
+    { title: t("Priority"), value: "case_priority.name", sortable: true },
+    { title: t("Project"), value: "project.display_name", sortable: true },
+    { title: t("Assignee"), value: "assignee", sortable: false },
+    { title: t("Cost"), key: "case_costs", sortable: false },
+    { title: t("Reported At"), value: "reported_at", sortable: true },
+    { title: t("Closed At"), value: "closed_at", sortable: true },
     { title: "", key: "data-table-actions", sortable: false, align: "end" },
   ]
 }

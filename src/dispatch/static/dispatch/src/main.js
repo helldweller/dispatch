@@ -1,5 +1,6 @@
 import { createApp } from "vue"
 import App from "./App.vue"
+import i18n, { setLocale } from "./i18n"
 import { vuetifyPlugin } from "./vuetify/"
 import router from "./router/"
 import store from "./store"
@@ -43,6 +44,8 @@ if (SENTRY_ENABLED) {
 }
 
 // Configure plugins
+app.use(i18n)
+setLocale(i18n.global.locale.value)
 app.use(vuetifyPlugin)
 app.use(router)
 app.use(store)

@@ -8,12 +8,12 @@
             :key="index"
             :to="{ name: route.name }"
             :prepend-icon="route.meta.icon"
-            :title="route.meta.title"
+            :title="$t(route.meta.title)"
           />
           <v-list-item
             @click.stop="toggleMiniNav()"
             :prepend-icon="mini ? 'mdi-chevron-right' : 'mdi-chevron-left'"
-            title="Minimize"
+            :title="$t('Minimize')"
           />
         </v-list>
       </v-navigation-drawer>
@@ -24,21 +24,21 @@
               v-if="showFilter"
               v-model="q"
               append-inner-icon="mdi-magnify"
-              label="Filter"
+              :label="$t('Filter')"
               single-line
               hide-details
             />
           </v-list-item>
           <span v-for="(subRoutes, group, idx) in children" :key="group">
             <v-list-subheader class="text-capitalize">
-              {{ group }}
+              {{ $t(group) }}
             </v-list-subheader>
             <v-list-item
               v-for="(route, subIndex) in subRoutes"
               :key="subIndex"
               :to="{ name: route.name, query: childrenQueryParams }"
             >
-              <v-list-item-title>{{ route.meta.title }}</v-list-item-title>
+              <v-list-item-title>{{ $t(route.meta.title) }}</v-list-item-title>
             </v-list-item>
             <v-divider v-if="idx != Object.keys(children).length - 1" />
           </span>
@@ -53,16 +53,16 @@
         :key="index"
         :to="{ name: route.name }"
         :prepend-icon="route.meta.icon"
-        :title="route.meta.title"
+        :title="$t(route.meta.title)"
       >
-        <v-tooltip v-if="mini" activator="parent" location="right" :text="route.meta.title" />
+        <v-tooltip v-if="mini" activator="parent" location="right" :text="$t(route.meta.title)" />
       </v-list-item>
       <v-list-item
         @click.stop="toggleMiniNav()"
         :prepend-icon="mini ? 'mdi-chevron-right' : 'mdi-chevron-left'"
-        title="Minimize"
+        :title="$t('Minimize')"
       >
-        <v-tooltip v-if="mini" activator="parent" location="right" text="Minimize" />
+        <v-tooltip v-if="mini" activator="parent" location="right" :text="$t('Minimize')" />
       </v-list-item>
     </v-list>
   </v-navigation-drawer>

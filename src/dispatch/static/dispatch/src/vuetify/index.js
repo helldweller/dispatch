@@ -4,9 +4,15 @@ import "@/styles/vuetify-md2-compat.css"
 import { createVuetify } from "vuetify"
 import * as components from "vuetify/components"
 import * as directives from "vuetify/directives"
+import { createVueI18nAdapter } from "vuetify/locale/adapters/vue-i18n"
+import { useI18n } from "vue-i18n"
+import i18n from "@/i18n"
 
 export function vuetifyPlugin(app) {
   const vuetify = createVuetify({
+    locale: {
+      adapter: createVueI18nAdapter({ i18n, useI18n }),
+    },
     defaults: {
       VTextField: {
         variant: "underlined",

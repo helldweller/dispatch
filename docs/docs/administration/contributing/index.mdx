@@ -59,3 +59,23 @@ Push the tag:
 ```
 git push origin latest
 ```
+
+## Localization
+
+The UI is translated with [vue-i18n](https://vue-i18n.intlify.dev/). The English string is the
+message key, so templates read `{{ $t("Report incident") }}` or `:label="$t('Search')"` and English
+needs no message file: a key without a translation renders as itself. Translations live in
+`src/dispatch/static/dispatch/src/locales/<locale>.json` as a flat map from the English string to
+the translated one.
+
+- Keys may contain dots and punctuation; `src/i18n/index.js` looks the whole key up before treating
+  dots as a nested path (Vuetify's own `$vuetify.*` messages still use the nested form).
+- Table headers and other strings built in `data()` or plain functions must move to a `computed`
+  property (Options API) or call `t()` from `useI18n()` (`<script setup>`), otherwise they do not
+  follow a language switch.
+- Adding a language: import its Vuetify messages from `vuetify/locale`, add the JSON file and an
+  entry to `SUPPORTED_LOCALES` in `src/i18n/index.js`.
+
+Users pick the language in the profile menu (avatar → Language); the choice is stored both in the
+browser and in the user's settings (`locale` in `dispatch_user_settings`), so it follows them across
+devices. Without a saved choice the UI follows the browser language.

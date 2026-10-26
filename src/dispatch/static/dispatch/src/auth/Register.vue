@@ -1,14 +1,14 @@
 <template>
   <v-form @submit.prevent="register({ email, password })" v-slot="{ isValid }">
     <v-card class="mx-auto ma-4" variant="outlined" max-width="600" flat :loading="loading">
-      <v-card-title> Register </v-card-title>
+      <v-card-title> {{ $t("Register") }} </v-card-title>
       <v-card-text>
         <v-container>
           <v-row>
             <v-col cols="12" md="12">
               <v-text-field
                 v-model="email"
-                label="Email"
+                :label="$t('Email')"
                 name="Email"
                 :rules="[rules.required, rules.email]"
               />
@@ -17,7 +17,7 @@
               <v-text-field
                 v-model="password"
                 type="password"
-                label="Password"
+                :label="$t('Password')"
                 name="Password"
                 :rules="[rules.required]"
               />
@@ -27,7 +27,8 @@
       </v-card-text>
       <v-card-actions>
         <div class="text-subheader-2 pl-4 text-medium-emphasis">
-          Have an account? <router-link :to="{ name: 'BasicLogin' }"> Login </router-link>
+          {{ $t("Have an account?") }}
+          <router-link :to="{ name: 'BasicLogin' }"> {{ $t("Login") }} </router-link>
         </div>
         <v-spacer />
         <v-btn
@@ -37,7 +38,7 @@
           :loading="loading"
           :disabled="!isValid"
         >
-          Register
+          {{ $t("Register") }}
           <template #loader>
             <v-progress-linear indeterminate color="white" />
           </template>
