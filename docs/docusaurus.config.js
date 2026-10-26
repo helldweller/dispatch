@@ -41,7 +41,11 @@ const config = {
   // to replace "en" with "zh-Hans".
   i18n: {
     defaultLocale: "en",
-    locales: ["en"],
+    locales: ["en", "ru"],
+    localeConfigs: {
+      en: { label: "English", htmlLang: "en" },
+      ru: { label: "Русский", htmlLang: "ru" },
+    },
   },
   plugins: [
     [
@@ -51,6 +55,7 @@ const config = {
         // Must track `blog: false` in the classic preset below — the plugin
         // hard-errors at postBuild if indexBlog is on with no blog plugin.
         indexBlog: false,
+        language: ["en", "ru"],
         style: undefined,
       },
     ],
@@ -110,6 +115,7 @@ const config = {
             position: "left",
           },
 
+          { type: "localeDropdown", position: "right" },
           {
             href: "https://github.com/helldweller/dispatch",
             position: "right",

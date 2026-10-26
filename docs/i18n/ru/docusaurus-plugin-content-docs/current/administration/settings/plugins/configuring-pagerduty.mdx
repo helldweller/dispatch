@@ -1,0 +1,35 @@
+---
+description: Параметры настройки плагина PagerDuty.
+---
+
+# Настройка PagerDuty
+
+:::info
+Dispatch поставляется с поддержкой определения дежурных по расписаниям через API PagerDuty.
+:::
+
+### Настройка Dispatch {#dispatch-configuration}
+
+Плагин PagerDuty настраивается в веб-интерфейсе Dispatch в разделе «Настройки» -> «Проект» -> «Плагины» (Settings -> Project -> Plugins). Добавьте плагин кнопкой `NEW`, затем откройте его настройки, нажав на три вертикальные точки.
+
+#### API Key {#api-key}
+
+> Ключ для обращения к API PagerDuty. См.: https://support.pagerduty.com/docs/generating-api-keys
+
+#### From Email {#from-email}
+
+> Адрес, который подставляется в поле «From» при любом вызове дежурного.
+
+#### Instance API URL {#instance-api-url}
+
+> URL вашего API (по умолчанию `https://api.pagerduty.com`, то есть экземпляр в США).
+
+## Настройка дежурной службы {#oncall-service-configuration}
+
+Откройте /services на веб-сервере с Dispatch и добавьте новую службу. Выберите тип `pagerduty-oncall` и укажите Service ID из PagerDuty в поле «Внешний идентификатор» (External Id).
+
+<div style={{textAlign: 'center'}}>
+
+![](/img/pagerduty-service-setup.png)
+
+</div>

@@ -1,0 +1,22 @@
+{
+  "title": {
+    "message": "Dispatch",
+    "description": "The title in the navbar"
+  },
+  "item.label.User Guide": {
+    "message": "Руководство пользователя",
+    "description": "Navbar item with label User Guide"
+  },
+  "item.label.Administration": {
+    "message": "Администрирование",
+    "description": "Navbar item with label Administration"
+  },
+  "item.label.API": {
+    "message": "API",
+    "description": "Navbar item with label API"
+  },
+  "item.label.Support": {
+    "message": "Поддержка",
+    "description": "Navbar item with label Support"
+  }
+}

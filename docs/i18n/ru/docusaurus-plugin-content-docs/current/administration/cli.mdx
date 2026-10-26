@@ -1,0 +1,259 @@
+---
+description: Обзор CLI Dispatch.
+---
+
+# CLI
+
+В комплекте с Dispatch идёт полноценный CLI с командами для конфигурации, сервера, планировщика, плагинов, базы данных и оболочки. Здесь мы дадим лишь частичный обзор; полный список команд Dispatch, доступных через CLI, выводит команда `dispatch --help` после установки приложения.
+
+## Сервер {#server}
+
+Подкоманда server объединяет все команды, относящиеся к серверу Dispatch.
+
+```bash
+> dispatch server --help                                                                        develop ⬇ ◼
+Usage: dispatch server [OPTIONS] COMMAND [ARGS]...
+
+  Container for all dispatch server commands.
+
+Options:
+  --help  Show this message and exit.
+
+Commands:
+  config   Prints the current config as dispatch sees it.
+  develop  Runs a simple server for development.
+  routes   Prints all available routes.
+  shell    Starts an ipython shell importing our app.
+  start
+```
+
+### Config {#config}
+
+Команда `config` помогает при отладке: она показывает переменные конфигурации так, как их видит сервер \(с учётом переменных окружения, значений по умолчанию и файла .env\).
+
+```bash
+> dispatch server config
+>
+Key                                       Value
+----------------------------------------  -----------------------
+DISPATCH_DOMAIN                           example.com
+STATIC_DIR
+METRIC_PROVIDERS                          spectator-metric
+...
+```
+
+### Develop {#develop}
+
+Команда `develop` запускает сервер для разработки. Он постоянно следит за изменениями файлов и перезагружается при каждом из них. Удобно сочетать его с уровнем логирования `DEBUG`, как показано ниже.
+
+```bash
+> dispatch server develop --log-level debug
+```
+
+### Routes {#routes}
+
+Команда `routes` полезна при разработке. Она показывает, какие адреса сейчас слушает сервер, какие HTTP-методы принимаются и включена ли аутентификация.
+
+```bash
+> dispatch server routes
+Path                                  Authenticated    Methods
+------------------------------------  ---------------  ---------
+/healthcheck                          False            GET
+/documents/                           True             GET
+/documents/{document_id}              True             GET
+/documents/                           True             POST
+...
+```
+
+### Shell {#shell}
+
+Команда `shell` полезна при разработке. Она открывает интерактивную оболочку Python с тем же контекстом, что и у самого сервера.
+
+```bash
+> dispatch server shell
+```
+
+### Start {#start}
+
+Команда `start` запускает веб-сервер Dispatch, пригодный для продакшена. Это псевдоним веб-сервера [uvicorn](https://www.uvicorn.org/), поэтому ей доступны все параметры и флаги этого сервера.
+
+```bash
+> dispatch server start --help
+Usage: dispatch server start [OPTIONS] APP
+
+Options:
+  --host TEXT                     Bind socket to this host.  [default:
+                                  127.0.0.1]
+  --port INTEGER                  Bind socket to this port.  [default: 8000]
+  --uds TEXT                      Bind to a UNIX domain socket.
+  --fd INTEGER                    Bind to socket from this file descriptor.
+  --reload                        Enable auto-reload.
+  --reload-dir TEXT               Set reload directories explicitly, instead
+                                  of using the current working directory.
+  ...
+```
+
+Чтобы запустить Dispatch, команде start нужно указать, где искать [ASGI](https://asgi.readthedocs.io/en/latest/)-приложение `dispatch`. Например, типичный набор флагов может выглядеть так:
+
+```bash
+> dispatch server start dispatch.main:app --workers 6 --host 127.0.0.1 --port 8000 --proxy-headers
+```
+
+## Планировщик {#scheduler}
+
+Команда `scheduler` содержит всю логику планировщика Dispatch.
+
+```bash
+> dispatch scheduler --help
+Usage: dispatch scheduler [OPTIONS] COMMAND [ARGS]...
+
+  Container for all dispatch scheduler commands.
+
+Options:
+  --help  Show this message and exit.
+
+Commands:
+  list   Prints and runs all currently configured periodic tasks, in...
+  start  Starts the scheduler.
+```
+
+### List {#list}
+
+Команда `list` выводит все задачи, зарегистрированные в планировщике. Сейчас периоды планировщика зашиты в код, и изменить их нельзя.
+
+Вывод ниже — показательный пример, а не полный список: каждая подсистема
+из `src/dispatch/*/scheduled.py` (case, case_cost, document, evergreen,
+incident, incident_cost, monitor, report, tag, task, term, workflow)
+регистрирует собственные задачи; полный актуальный список получите, запустив
+команду на своём экземпляре.
+
+```bash
+> dispatch scheduler list
+Task Name                       Period          At Time
+-------------------------------  --------------  ---------
+incident-status-report-reminder  1:00:00
+incident-daily-summary           1 day, 0:00:00  18:00:00
+calculate-incident-cost          0:05:00
+incident-task-reminders          1:00:00
+incident-task-sync               0:00:30
+term-sync                        1:00:00
+document-term-sync               1 day, 0:00:00
+application-sync                 1:00:00
+calculate-cases-response-cost    1:00:00
+case-close-reminder              1 day, 0:00:00  18:00:00
+case-triage-reminder             1 day, 0:00:00  18:00:00
+case-stable-reminder             1 day, 0:00:00  18:00:00
+```
+
+### Start {#start-1}
+
+Команда `start` запускает планировщик, после чего задачи выполняются с заданным периодом.
+
+```bash
+> dispatch scheduler start
+Starting scheduler...
+```
+
+Часто бывает нужно выполнить конкретную задачу немедленно:
+
+```bash
+> dispatch scheduler start incident-status-report-reminder --eager
+```
+
+## База данных {#database}
+
+Команда `database` содержит всю логику работы с базой данных Dispatch.
+
+```bash
+> dispatch database --help
+Usage: dispatch database [OPTIONS] COMMAND [ARGS]...
+
+  Container for all dispatch database commands.
+
+Options:
+  --help  Show this message and exit.
+
+Commands:
+  downgrade  Downgrades database schema to the next newest version.
+  drop       Drops all data in database.
+  dump       Dumps the database via pg_dump.
+  heads      Shows the heads of the database.
+  history    Shows the history of the database.
+  init       Initializes a new database.
+  merge      Combines two revisions.
+  restore    Restores the database via psql.
+  revision   Create new database revision.
+  stamp      Forces the database to a given revision.
+  upgrade    Upgrades database schema to newest version.
+```
+
+:::info
+Примечание: команда database объединяет собственные команды и команды `alembic`. Подробнее о миграциях базы данных через alembic читайте [здесь](https://alembic.sqlalchemy.org/en/latest/).
+:::
+
+### Init {#init}
+
+Команда `init` берёт чистую базу данных и создаёт таблицы и значения, необходимые для работы Dispatch.
+
+```bash
+> dispatch database init
+```
+
+### Revision {#revision}
+
+Команда `revision` — это команда `alembic`, которая создаёт новую ревизию схемы базы данных по моделям приложения.
+
+Обычно её используют вместе с флагом `--autogenerate`:
+
+```bash
+> dispatch database revision --autogenerate
+```
+
+### Upgrade/Downgrade {#upgradedowngrade}
+
+Команды `upgrade` и `downgrade` управляют применением миграций `alembic`: с их помощью базу данных можно двигать по ревизиям вперёд и назад. Команду `upgrade` вам придётся запускать почти после каждой установки новой версии Dispatch.
+
+```bash
+> dispatch database upgrade
+```
+
+### Restore/Dump {#restoredump}
+
+Команды `restore` и `dump` позволяют быстро сделать резервную копию базы данных Dispatch и восстановить её. С их помощью можно также загрузить наш [тестовый](https://github.com/helldweller/dispatch/blob/main/data/dispatch-sample-data.dump) набор данных в вашу установку Dispatch.
+
+Сейчас файл `.dump` должен лежать в `$CWD` и называться `dispatch-backup.dump`.
+
+## Плагины {#plugins}
+
+Команда `plugin` содержит всю логику работы с плагинами Dispatch.
+
+### List {#list-1}
+
+Команда `list` выводит все доступные плагины. Она помогает понять, какие плагины можно подключить через переменные конфигурации.
+
+```bash
+> dispatch plugins list
+Title                             Slug                            Version     Type               Author         Description
+--------------------------------  ------------------------------  ----------  -----------------  -------------  ---------------------------------------------------------
+Dispatch - Document Resolver      dispatch-document-resolver      0.1.0       document-resolver  Kevin Glisson  Uses dispatch itself to resolve incident documents.
+Dispatch - Participants           dispatch-participants           0.1.0       participant        Kevin Glisson  Uses dispatch itself to determine participants.
+Google Docs - Document            google-docs-document            0.1.0       document           Kevin Glisson  Uses google docs to manage document contents.
+Google Group - Participant Group  google-group-participant-group  0.1.0       participant_group  Kevin Glisson  Uses Google Groups to help manage participant membership.
+...
+```
+
+### Install {#install}
+
+Команда `install` попытается установить все доступные плагины.
+
+```bash
+> dispatch plugins install
+INFO:dispatch.common.utils.cli:Attempting to load plugin: dispatch_basic_auth
+INFO:dispatch.common.utils.cli:Successfully loaded plugin: dispatch_basic_auth
+INFO:dispatch.common.utils.cli:Attempting to load plugin: dispatch_contact
+INFO:dispatch.common.utils.cli:Successfully loaded plugin: dispatch_contact
+INFO:dispatch.common.utils.cli:Attempting to load plugin: dispatch_document_resolver
+...
+```
+
+Имейте в виду: так плагины лишь становятся доступными. Чтобы включить их, [создайте и настройте экземпляр плагина](settings/plugins)

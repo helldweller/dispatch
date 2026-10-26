@@ -6,7 +6,7 @@ description: Overview of the Dispatch CLI.
 
 Dispatch ships with a robust CLI, providing configuration, server, scheduler, plugin, database, and shell commands. Here we'll give a partial overview; if you'd like a complete list of Dispatch commands available via the CLI, please use the command `dispatch --help` once you have installed the application.
 
-## Server
+## Server {#server}
 
 The server sub-command contains all Dispatch server-related commands.
 
@@ -27,7 +27,7 @@ Commands:
   start
 ```
 
-### Config
+### Config {#config}
 
 The `config` command helps debug as it shows the configuration variables seen by the server \(combining envvars, defaults, and the .env file\).
 
@@ -42,7 +42,7 @@ METRIC_PROVIDERS                          spectator-metric
 ...
 ```
 
-### Develop
+### Develop {#develop}
 
 The `develop` command starts the development server. This server will continually watch for file changes and reload the server accordingly. You'll find it useful to combine this with a `DEBUG` log level, as below.
 
@@ -50,7 +50,7 @@ The `develop` command starts the development server. This server will continuall
 > dispatch server develop --log-level debug
 ```
 
-### Routes
+### Routes {#routes}
 
 The `routes` command is useful for development. This command shows which endpoints the server is currently listening on, the HTTP verb methods are accepted, and whether authentication is enabled.
 
@@ -65,7 +65,7 @@ Path                                  Authenticated    Methods
 ...
 ```
 
-### Shell
+### Shell {#shell}
 
 The `shell` command is useful for development. It drops you into an interactive python shell with the same context as the server itself.
 
@@ -73,7 +73,7 @@ The `shell` command is useful for development. It drops you into an interactive 
 > dispatch server shell
 ```
 
-### Start
+### Start {#start}
 
 The `start` command starts a production-grade Dispatch web server. It's an alias to the [uvicorn](https://www.uvicorn.org/) web server, so it contains all of the options and flags available with that server.
 
@@ -99,7 +99,7 @@ To start Dispatch, you will need to tell the start command where to find the `di
 > dispatch server start dispatch.main:app --workers 6 --host 127.0.0.1 --port 8000 --proxy-headers
 ```
 
-## Scheduler
+## Scheduler {#scheduler}
 
 The `scheduler` command contains all of the Dispatch scheduler logic.
 
@@ -117,7 +117,7 @@ Commands:
   start  Starts the scheduler.
 ```
 
-### List
+### List {#list}
 
 The `list` command lists all tasks registered with the scheduler. Today the scheduler periods are hardcoded and cannot be adjusted.
 
@@ -145,7 +145,7 @@ case-triage-reminder             1 day, 0:00:00  18:00:00
 case-stable-reminder             1 day, 0:00:00  18:00:00
 ```
 
-### Start
+### Start {#start-1}
 
 The `start` command starts the scheduler and allows tasks to be executed based on the defined period.
 
@@ -160,7 +160,7 @@ Often it's helpful to run a particular task immediately:
 > dispatch scheduler start incident-status-report-reminder --eager
 ```
 
-## Database
+## Database {#database}
 
 The `database` command contains all of the Dispatch database logic.
 
@@ -191,7 +191,7 @@ Commands:
 Note: The database command is a combination of custom commands and `alembic` commands. For more information about alembic database migrations, see [here](https://alembic.sqlalchemy.org/en/latest/).
 :::
 
-### Init
+### Init {#init}
 
 The `init` command takes a fresh database and creates the necessary tables and values for Dispatch to operate.
 
@@ -199,7 +199,7 @@ The `init` command takes a fresh database and creates the necessary tables and v
 > dispatch database init
 ```
 
-### Revision
+### Revision {#revision}
 
 The `revision` command is an `alembic` command that creates a new database schema revision based on the application's models.
 
@@ -209,7 +209,7 @@ Commonly used in conjunction with the `--autogenerate` flag:
 > dispatch database revision --autogenerate
 ```
 
-### Upgrade/Downgrade
+### Upgrade/Downgrade {#upgradedowngrade}
 
 The `upgrade` and `downgrade` commands manage how `alembic` database migrations are deployed, allowing you to move the database forward and backward through revisions. You'll often need to run the `upgrade` command after installing a new version of Dispatch.
 
@@ -217,17 +217,17 @@ The `upgrade` and `downgrade` commands manage how `alembic` database migrations 
 > dispatch database upgrade
 ```
 
-### Restore/Dump
+### Restore/Dump {#restoredump}
 
 The `restore` and `dump` commands allow you to quickly backup and restore the Dispatch database. It can also be used to load our [example](https://github.com/helldweller/dispatch/blob/main/data/dispatch-sample-data.dump) data set into your Dispatch installation.
 
 Today, the `.dump` file must be located in `$CWD` and must be named `dispatch-backup.dump`.
 
-## Plugins
+## Plugins {#plugins}
 
 The `plugin` command contains all of the logic for dealing with Dispatch's plugins.
 
-### List
+### List {#list-1}
 
 The `list` command lists all currently available plugins. This command is useful in determining which plugins are available to be used via configuration variables.
 
@@ -242,7 +242,7 @@ Google Group - Participant Group  google-group-participant-group  0.1.0       pa
 ...
 ```
 
-### Install
+### Install {#install}
 
 The `install` command will try installing all available plugins.
 

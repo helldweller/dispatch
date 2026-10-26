@@ -29,13 +29,13 @@ Enabling evergreen for a template instructs Dispatch to send an email reminder t
 
 **Evergreen Reminder Interval:** Number of days that should elapse between reminders sent to the document template owner.
 
-### Case Template
+### Case Template {#case-template}
 
 A copy of this template is created for each new case on case creation. It contains the current state of the case and is used by the case owner/ assignee to capture facts and findings.
 
 - [Example Case Document](https://docs.google.com/document/d/1g1cl9liXG8US0eBnrZYRaeWa7Ek_hoZJ5PPadas44vI)
 
-#### Template Variables
+#### Template Variables {#template-variables}
 
 The following is a list of available variables that Dispatch will attempt to resolve on document creation. Note: we do not currently re-resolve these.
 
@@ -52,13 +52,13 @@ NOTE: All variables must be enclosed in a `{{}}`
 - `case_status` - The case's status
 - `case_storage_weblink` - Link to the storage resource
 
-### Incident Template
+### Incident Template {#incident-template}
 
 A copy of this template is created for each new incident on incident creation. It contains the current state of the incident and is used by incident participants to share knowledge about the incident.
 
 - [Example Incident Document](https://docs.google.com/document/d/1fv--CrGpWJJ4nyPR0N0hq4JchHJPuqsXN4azE9CGQiE)
 
-#### Template Variables
+#### Template Variables {#template-variables-1}
 
 The following is a list of available variables that Dispatch will attempt to resolve on document creation. Note: we do not currently re-resolve these.
 
@@ -78,25 +78,25 @@ NOTE: All variables must be enclosed in a `{{}}`
 - `document_weblink` - Link to the incident document (if any)
 - `ticket_weblink` - Link to the incident ticket (if any)
 
-### Executive Template
+### Executive Template {#executive-template}
 
 Often during an incident an executive report needs to be drafted that provides a high-level overview of the incident and the current actions that are being carried out. A copy of this template will be created, filled, and stored in the incident storage every time a new executive report is drafted.
 
 - [Example Executive Report](https://docs.google.com/document/d/1dab6k14p5ageo5B_d1YlB_zS9hMGHDMXy9RUbIZous4)
 
-### Review Template
+### Review Template {#review-template}
 
 A copy of this template is automatically created when an incident is marked as stable. It is used by the incident commander and participants for reconciling any incident learnings, discussions, or post-incident tasks.
 
 - [Example Incident Review Document](https://docs.google.com/document/d/1MkCTyheZRtKzMxOBhLgh3PrvarERA9Bwo0joM7D9tmg)
 
-### Tracking Template
+### Tracking Template {#tracking-template}
 
 Some incidents require the tracking of multiple assets, this template is a simple spreadsheet that allows incident participants to collaborate on tabular data.
 
 - [Example Incident Tracking Sheet](https://docs.google.com/spreadsheets/d/1Odk4KlL7uMF_yd7OvTOCaPWmtTA_WzFBIA4lMeU5cGY)
 
-### Template Association
+### Template Association {#template-association}
 
 Case and incident templates can be associated to their corresponding types. This allows our templates to closely match a given case or incident type and provide additional context and direction for those given types.
 

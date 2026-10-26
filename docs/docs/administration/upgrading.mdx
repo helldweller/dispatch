@@ -13,9 +13,9 @@ Beyond that, upgrades are simple as bumping the version of Dispatch \(which will
 In some cases, you may want to stop services before doing the upgrade process or avoid intermittent errors.
 :::
 
-## Upgrading Dispatch
+## Upgrading Dispatch {#upgrading-dispatch}
 
-### Upgrading the package
+### Upgrading the package {#upgrading-the-package}
 
 The easiest way to upgrade the Dispatch package using `pip`:
 
@@ -27,7 +27,7 @@ You may prefer to install a fixed version rather than the latest, as it will all
 
 If you're installing from source code, you may have additional unfulfilled requirements, so take the necessary precautions of testing your environment before committing to the upgrade.
 
-### Running Migrations
+### Running Migrations {#running-migrations}
 
 Just as during the initial setup, migrations are applied with the upgrade command.
 
@@ -35,7 +35,7 @@ Just as during the initial setup, migrations are applied with the upgrade comman
 dispatch database upgrade
 ```
 
-### Restarting services
+### Restarting services {#restarting-services}
 
 You'll need to ensure that _all_ of Dispatch's services are restarted after an upgrade. Restarting these services is required because Python loads modules in memory, and code changes will not be reflected until they are restarted.
 

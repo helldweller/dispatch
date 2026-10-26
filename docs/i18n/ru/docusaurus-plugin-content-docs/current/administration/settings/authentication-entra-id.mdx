@@ -1,0 +1,245 @@
+---
+description: >-
+  Настройка аутентификации пользователей Dispatch через Microsoft Entra ID по
+  OpenID Connect.
+---
+
+# Аутентификация через Microsoft Entra ID
+
+Dispatch аутентифицирует пользователей в Microsoft Entra ID через свой универсальный провайдер OpenID
+Connect — `dispatch-auth-provider-pkce`. Отдельного плагина для Entra нет, и он не
+нужен: браузер выполняет authorization code flow OAuth 2.0 с PKCE в вашем тенанте,
+а API Dispatch проверяет полученный **ID-токен** при каждом запросе.
+
+На этой странице — полная конфигурация для внутреннего деплоя Dispatch в одной
+организации. Значение каждого отдельного параметра описано в разделе
+[Сервер](server#authentication).
+
+:::warning
+Каждый, кто может войти, получает учётную запись. Dispatch создаёт пользователя с ролью `Member`
+при первом же запросе от принятой им личности — ни этапа подтверждения, ни
+списка разрешённых нет. Граница тенанта *и есть* граница авторизации, поэтому
+`DISPATCH_AUTHENTICATION_PROVIDER_PKCE_ISSUER` ниже на практике обязателен.
+См. [Кто может войти](#who-can-sign-in).
+:::
+
+## Создайте регистрацию приложения {#create-the-app-registration}
+
+В [центре администрирования Microsoft Entra](https://entra.microsoft.com) откройте
+**Identity → Applications → App registrations → New registration**.
+
+| Поле | Значение |
+| --- | --- |
+| **Name** | `Dispatch` |
+| **Supported account types** | **Accounts in this organizational directory only (Single tenant)** |
+| **Redirect URI** | Платформа **Single-page application (SPA)**, URI `https://dispatch.example.com/implicit/callback` |
+
+Запишите **Application (client) ID** и **Directory (tenant) ID** со страницы Overview
+регистрации.
+
+### Поддерживаемые типы учётных записей {#supported-account-types}
+
+Выберите **single tenant**. В Dispatch нет этапа подтверждения пользователей, поэтому мультитенантная
+регистрация означает, что любая рабочая, учебная или личная учётная запись Microsoft в мире
+сможет войти и получить учётную запись. Выбирайте multitenant, только если действительно хотите
+пускать гостей из других каталогов, и дополните это отдельным механизмом
+авторизации — параметр издателя ниже может закрепить только один тенант.
+
+### Redirect URI {#redirect-uri}
+
+Redirect URI нужно зарегистрировать на платформе **Single-page application**,
+а не **Web**. Именно это заставляет Entra:
+
+* отдавать CORS-заголовки на конечной точке токена, чтобы браузер мог обменять код, и
+* принимать обмен кода без клиентского секрета.
+
+Если зарегистрировать его как **Web**, при обмене токена вы получите `AADSTS9002326: Cross-origin token redemption
+is permitted only for the 'Single-Page Application' client-type`.
+
+Путь фиксирован: фронтенд Dispatch всегда перенаправляет на `/implicit/callback`
+на своём origin и восстанавливает страницу, на которой вы были, из хранилища браузера, поэтому
+сколько бы маршрутов ни было в приложении, зарегистрировать нужно только этот один URI. Добавьте
+`http://localhost:8080/implicit/callback` вторым URI, если хотите, чтобы локальный
+dev-сервер входил через ту же регистрацию.
+
+### Клиентский секрет {#client-secret}
+
+**Не создавайте его.** Одностраничное приложение — публичный клиент; Microsoft
+документирует, что SPA не должны использовать секреты или сертификаты при обмене
+кода авторизации, а Entra отклоняет учётные данные клиента в любом запросе с
+заголовком `Origin`. Dispatch его никогда не отправляет, и ему негде его хранить так, чтобы
+браузер не мог его прочитать. Код к этому клиенту привязывает PKCE, а не секрет.
+
+### Области и разрешения {#scopes-and-permissions}
+
+`openid`, `profile` и `email` — три области OpenID Connect, которые фронтенд
+и так запрашивает. Больше ничего. Это делегированные разрешения, не требующие
+согласия администратора, и ни одно из них не является разрешением Microsoft Graph: Dispatch берёт
+личность пользователя из ID-токена и никогда не обращается к Graph.
+
+Оставьте в **API permissions** значение `User.Read`, которое Entra добавляет по умолчанию, или удалите его.
+Dispatch его не использует.
+
+### Claims токена {#token-claims}
+
+Dispatch нужен ровно один claim: адрес электронной почты, по которому идентифицируется пользователь. По умолчанию
+он читает `email`, но Entra выдаёт `email` для управляемого пользователя, только если добавить его как
+необязательный claim или запросить область `email`, и Microsoft документирует это значение
+как изменяемое пользователем и не гарантированно корректное.
+
+Используйте вместо него `preferred_username`: это имя участника-пользователя (UPN), оно выдаётся
+с областью `profile` и контролируется каталогом:
+
+```text
+DISPATCH_JWT_EMAIL_OVERRIDE=preferred_username
+```
+
+Настраивать необязательные claims не требуется. Если ваши UPN — не маршрутизируемые почтовые
+адреса (Dispatch также использует это значение, чтобы сопоставлять людей с инцидентами и
+адресовать уведомления), добавьте `email` в **Token configuration → Add optional
+claim → ID → email** и оставьте `DISPATCH_JWT_EMAIL_OVERRIDE` незаданным.
+
+## Настройте Dispatch {#configure-dispatch}
+
+С `<tenant-id>` и `<client-id>` из регистрации:
+
+```bash
+# Select the OIDC provider
+DISPATCH_AUTHENTICATION_PROVIDER_SLUG=dispatch-auth-provider-pkce
+
+# Backend: which tokens to accept
+DISPATCH_AUTHENTICATION_PROVIDER_PKCE_JWKS=https://login.microsoftonline.com/<tenant-id>/discovery/v2.0/keys
+DISPATCH_AUTHENTICATION_PROVIDER_PKCE_ISSUER=https://login.microsoftonline.com/<tenant-id>/v2.0
+DISPATCH_JWT_AUDIENCE=<client-id>
+DISPATCH_JWT_EMAIL_OVERRIDE=preferred_username
+
+# Frontend: how to obtain one
+VITE_DISPATCH_AUTHENTICATION_PROVIDER_PKCE_OPEN_ID_CONNECT_URL=https://login.microsoftonline.com/<tenant-id>/v2.0
+DISPATCH_AUTHENTICATION_PROVIDER_PKCE_CLIENT_ID=<client-id>
+DISPATCH_AUTHENTICATION_PROVIDER_USE_ID_TOKEN=true
+```
+
+Пояснения к менее очевидным:
+
+* **`..._OPEN_ID_CONNECT_URL` — это издатель, без завершающего слеша и без
+  суффикса `.well-known`.** Фронтенд сам добавляет
+  `/.well-known/openid-configuration`.
+* **`..._USE_ID_TOKEN=true` обязателен, а не желателен.** Без него
+  фронтенд отправляет в API Dispatch *access*-токен Entra. Когда запрошены только области OIDC,
+  этот токен выпущен для Microsoft Graph, а не для Dispatch —
+  Microsoft рекомендует не читать и не проверять токены для API, которым вы не
+  владеете, а его формат не гарантированно является проверяемым JWT.
+* **`DISPATCH_JWT_AUDIENCE` — это client id.** `aud` ID-токена Entra — это
+  приложение, для которого он выпущен. Если параметр не задан, отклоняется каждый токен.
+* Параметры с префиксом `VITE_` читаются при **сборке** фронтенд-бандла, а не
+  при запуске сервера — см. [Сборка фронтенда](#frontend-build).
+
+### Ограничение входа вашим тенантом {#restricting-sign-in-to-your-tenant}
+
+Это делают две вещи, и важны обе:
+
+1. **Регистрация — single tenant**, поэтому Entra выпускает токен с
+   вашим `aud` только для пользователей вашего каталога.
+2. **`DISPATCH_AUTHENTICATION_PROVIDER_PKCE_ISSUER` закрепляет тенант.** Entra подписывает
+   токены всех тенантов общим набором ключей — одни и те же key id публикуются на
+   `/common` и на `discovery/v2.0/keys` отдельного тенанта, — поэтому корректная
+   подпись доказывает лишь то, что токен пришёл от Microsoft. URL JWKS, привязанный к тенанту,
+   этого не сужает. Именно проверка издателя связывает токен с вашим каталогом,
+   и это единственный механизм, который продолжит работать, если регистрацию когда-нибудь
+   переключат на multitenant.
+
+Ограничивайте, *какие именно* пользователи тенанта могут входить, средствами Entra, а не
+Dispatch: установите **Enterprise applications → Dispatch → Properties →
+Assignment required** в **Yes** и назначьте группы, которым нужен доступ.
+В Dispatch аналога нет.
+
+### Сборка фронтенда {#frontend-build}
+
+Три значения с префиксом `VITE_` компилируются в JavaScript-бандл, поэтому
+их изменение означает пересборку фронтенда, а не перезапуск сервера. При
+сборке образа контейнера передайте их как аргументы сборки:
+
+```bash
+docker build \
+  --build-arg VITE_DISPATCH_AUTHENTICATION_PROVIDER_SLUG=dispatch-auth-provider-pkce \
+  --build-arg VITE_DISPATCH_AUTHENTICATION_PROVIDER_PKCE_CLIENT_ID=<client-id> \
+  --build-arg VITE_DISPATCH_AUTHENTICATION_PROVIDER_PKCE_OPEN_ID_CONNECT_URL=https://login.microsoftonline.com/<tenant-id>/v2.0 \
+  --build-arg VITE_DISPATCH_AUTHENTICATION_PROVIDER_USE_ID_TOKEN=true \
+  -f docker/Dockerfile .
+```
+
+Параметры бэкенда — обычные переменные окружения и вступают в силу после
+перезапуска. Ни один из них не секрет, поэтому их можно спокойно держать в файле Compose или в логе
+сборки образа — клиентского секрета в этой конфигурации нет нигде.
+
+## Кто может войти {#who-can-sign-in}
+
+Dispatch заводит пользователя при первом появлении. Первый запрос с принятым ID-токеном
+создаёт `DispatchUser` с ролью `Member` в той организации, к которой
+обращён запрос; администратор в этом не участвует. `Member` не может администрировать
+деплой, но может читать инциденты и кейсы и работать с ними.
+
+Следовательно:
+
+* **Ограничивайте доступ в Entra, а не в Dispatch.** Используйте *Assignment required* и
+  назначение групп в enterprise application.
+* **Повышайте роли осознанно.** Выдавайте `Admin` или `Owner` в разделе
+  **«Настройки» → «Пользователи»** (Settings → Users) или командой
+  `dispatch user update --role owner --organization <org> <email>`.
+
+### Существующие пользователи Dispatch {#existing-dispatch-users}
+
+Пользователи идентифицируются по адресу электронной почты, и с включением Entra это не меняется.
+Уже существующая учётная запись — созданная самостоятельной регистрацией через базовую аутентификацию,
+администратором или прежним провайдером OIDC — сопоставляется по email и сохраняет
+свои роли, проекты и историю, когда тот же адрес впервые входит
+через Entra. Миграция или повторное заведение не нужны.
+
+Обратная сторона: кому бы каталог ни выдал адрес, тот наследует
+учётную запись Dispatch с этим адресом. Именно поэтому издатель должен быть закреплён за
+тем единственным тенантом, который управляет этими почтовыми ящиками. Прежде чем переключать деплой,
+проверьте существующие учётные записи на адреса, которыми ваш тенант не владеет, — внешние
+подрядчики, общие почтовые ящики, тестовые учётные записи — и удалите или
+переименуйте те, которые не должны доставаться кому попало.
+
+:::info
+Dispatch намеренно не идентифицирует пользователей по неизменяемым `oid`/`sub` Entra. Email —
+ключ связи во всём продукте: для участников инцидентов, поиска контактов
+и каждого плагина сообщений, — так что непрозрачный идентификатор всё равно пришлось бы
+переводить обратно в адрес. Адресу можно доверять благодаря ограничению тенанта, а не
+неизменяемости claim.
+:::
+
+## Проверка работы {#verifying-it-works}
+
+1. Перезапустите сервер (и пересоберите фронтенд) с параметрами выше.
+2. Откройте Dispatch. Вас должно перенаправить на `login.microsoftonline.com` и обратно.
+3. Проверьте лог сервера при запуске. Провайдер PKCE предупреждает обо всём, что ему
+   нужно, но не задано, — отсутствующий URL JWKS, издатель или аудитория.
+
+### Устранение неполадок {#troubleshooting}
+
+| Симптом | Причина |
+| --- | --- |
+| `AADSTS9002326`, cross-origin token redemption | Redirect URI зарегистрирован как **Web**; поменяйте на **Single-page application**. |
+| Ошибка CORS на `/token` | То же, что выше. |
+| Петля перенаправлений или 401 на каждый вызов API после успешного входа | `DISPATCH_AUTHENTICATION_PROVIDER_USE_ID_TOKEN` не равен `true`, поэтому отправляется access-токен Graph. |
+| 401 с *Token rejected: Invalid audience* в логе | `DISPATCH_JWT_AUDIENCE` не задан или не равен client id. |
+| 401 с *Token rejected: Invalid issuer* | Tenant id в `..._PKCE_ISSUER` не совпадает с тенантом, через который выполнен вход. |
+| 401 с *Token carries no 'email' claim* | Задайте `DISPATCH_JWT_EMAIL_OVERRIDE=preferred_username` или добавьте необязательный claim `email`. |
+| `AADSTS50011`, redirect URI mismatch | Зарегистрированный URI должен быть в точности origin деплоя плюс `/implicit/callback`. |
+
+## Возврат к другому провайдеру {#reverting-to-another-provider}
+
+В базе данных откатывать нечего — вход через Entra создаёт обычных
+пользователей Dispatch. Чтобы вернуться к базовой аутентификации, задайте
+
+```bash
+DISPATCH_AUTHENTICATION_PROVIDER_SLUG=dispatch-auth-provider-basic
+DISPATCH_JWT_SECRET=<secret>
+```
+
+пересоберите фронтенд с соответствующим `VITE_DISPATCH_AUTHENTICATION_PROVIDER_SLUG`
+и перезапустите. Учётные записи, заведённые через Entra, остаются, но были созданы без
+рабочего пароля, поэтому каждому пользователю нужен сброс пароля от владельца, прежде чем он сможет
+снова войти. Удалите регистрацию приложения в Entra, когда она больше не нужна.

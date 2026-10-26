@@ -1,0 +1,49 @@
+# Сообщения
+
+Dispatch умеет отправлять уведомления по электронной почте участникам — например, участникам инцидента.
+
+## Шаблоны уведомлений {#notification-templates}
+
+Шаблоны писем — [часть](https://github.com/helldweller/dispatch/tree/main/src/dispatch/messaging/email/templates) Dispatch:
+это шаблоны [Jinja](https://jinja.palletsprojects.com/), которые во время работы компилируются в формат [MJML](https://mjml.io/).
+
+Эти шаблоны можно подстроить под себя. Если вы запускаете Dispatch через [Docker Compose](https://github.com/Jamyn/dispatch-docker/),
+подключите том с каталогом изменённых шаблонов прямо в docker compose:
+
+```
+  web:
+    image: dispatch-local
+    ...
+    volumes:
+      - "../dispatch-templates/messaging-email-templates:/usr/local/lib/python3.14/site-packages/dispatch/messaging/email/templates"
+```
+
+Такой подход позволяет изменить общий шаблон для _всех проектов_.
+
+Шаблоны можно также «подменять» _для отдельного проекта_. Создайте папку для проекта (по идентификатору проекта):
+
+```
+dispatch/messaging/email/templates/project_id/<project_id>/base.mjml
+```
+
+Если она есть, она будет использована в первую очередь,
+иначе поиск шаблона спокойно откатится к шаблону по умолчанию:
+
+```
+dispatch/messaging/email/templates/base.mjml
+```
+
+## Markdown в уведомлениях {#markdown-in-the-notifications}
+
+:::warning
+Помните о рисках безопасности, связанных с неэкранированным HTML: он может разойтись по всей системе.
+:::
+
+По умолчанию текст уведомления — обычный текст, в котором спецсимволы и HTML экранированы.
+
+Однако синтаксис Markdown можно включить настройкой сервера:
+
+```
+DISPATCH_MARKDOWN_IN_INCIDENT_DESC=True
+DISPATCH_ESCAPE_HTML=False
+```

@@ -4,13 +4,13 @@ description: What to expect as an incident commander.
 
 # Commander
 
-## Reporting
+## Reporting {#reporting}
 
 Within Dispatch, Incident Commanders \(ICs\) are also participants and will receive all of the participant messaging. When resolved as the Incident Commander, you are assigned that Dispatch role, and your identity is propagated.
 
 All Slack commands are listed below, or you may view _groups_ of commands relating to [People](#people), [Communications](#communications), [Tasks](#tasks), and [Incident Resources & Metadata](#incident-resources-and-metadata).
 
-## All Slack commands
+## All Slack commands {#all-slack-commands}
 
 - [`/dispatch-add-timeline-event`](#dispatch-add-timeline-event)
 - [`/dispatch-assign-role`](#dispatch-assign-role)
@@ -35,11 +35,11 @@ All Slack commands are listed below, or you may view _groups_ of commands relati
 - [`/dispatch-list-signals`](#dispatch-list-signals)
 - [`/dispatch-summary`](#dispatch-summary)
 
-## People
+## People {#people}
 
 These commands help manage the people helping resolve the incident.
 
-### /dispatch-assign-role
+### /dispatch-assign-role {#dispatch-assign-role}
 
 Anyone helping run an incident may play various roles. For example, you may have a scribe or an executive liaison, or you may hand off the incident to a new Incident Commander. At any of these times, use `/dispatch-assign-role` to quickly assign a role to any individual.
 
@@ -51,7 +51,7 @@ It's essential to use this command when handing off responsibility for incident 
 
 </div>
 
-### /dispatch-engage-oncall
+### /dispatch-engage-oncall {#dispatch-engage-oncall}
 
 You'll need the help of various teams to resolve an incident. To quickly engage an on-call member of another team, use `/dispatch-engage-oncall` to determine their identity and optionally page them.
 
@@ -61,7 +61,7 @@ You'll need the help of various teams to resolve an incident. To quickly engage 
 
 </div>
 
-### /dispatch-list-participants
+### /dispatch-list-participants {#dispatch-list-participants}
 
 Use this command to determine which teams and individuals are engaged in the incident. The output looks like this:
 
@@ -71,7 +71,7 @@ Use this command to determine which teams and individuals are engaged in the inc
 
 </div>
 
-### /dispatch-update-participant
+### /dispatch-update-participant {#dispatch-update-participant}
 
 Participants in an incident, or the Incident Commander, may want to know a participant's area of expertise or their expected contribution to resolving an incident. Use `/dispatch-update-participant` to update the reason a participant was added. The dialog appears like this:
 
@@ -81,11 +81,11 @@ Participants in an incident, or the Incident Commander, may want to know a parti
 
 </div>
 
-## Communications
+## Communications {#communications}
 
 These commands help manage incident communications.
 
-### /dispatch-notifications-group
+### /dispatch-notifications-group {#dispatch-notifications-group}
 
 An incident notifications group consists of individuals or distribution lists. Manage this group by using `/dispatch-notifications-group.`
 
@@ -95,7 +95,7 @@ An incident notifications group consists of individuals or distribution lists. M
 
 </div>
 
-### /dispatch-report-executive
+### /dispatch-report-executive {#dispatch-report-executive}
 
 Some stakeholders are invested in an incident's progress but aren't expected to be directly involved with the incident. For example, your Chief Financial Officer may want to know of an ongoing security incident regarding financial data but will likely not be directing participants or their actions. To keep external stakeholders such as these informed, use `/dispatch-report-executive` to build and distribute a high-level report.
 
@@ -105,7 +105,7 @@ Some stakeholders are invested in an incident's progress but aren't expected to 
 
 </div>
 
-### /dispatch-report-incident
+### /dispatch-report-incident {#dispatch-report-incident}
 
 Use `/dispatch-report-incident` to report a new incident.
 
@@ -115,7 +115,7 @@ Use `/dispatch-report-incident` to report a new incident.
 
 </div>
 
-### /dispatch-report-tactical
+### /dispatch-report-tactical {#dispatch-report-tactical}
 
 Regular tactical reports, such as using the Conditions, Actions, and Needs (CAN) format, are critical to keeping your participants well-informed. Use `/dispatch-report-tactical` to easily create these.
 
@@ -135,7 +135,7 @@ The output in the Slack channel will appear like this:
 
 </div>
 
-## Tasks
+## Tasks {#tasks}
 
 Dispatch provides a lightweight bridge between Google Docs comments assigned as tasks and your Slack incident channel.
 
@@ -149,7 +149,7 @@ It looks like this, in the Incident Document:
 
 The following commands help manage these tasks associated with an incident.
 
-### /dispatch-list-my-tasks
+### /dispatch-list-my-tasks {#dispatch-list-my-tasks}
 
 Any individual who issues the `/dispatch-list-my-tasks` command will see a list of tasks created by or assigned to them.
 
@@ -159,7 +159,7 @@ Any individual who issues the `/dispatch-list-my-tasks` command will see a list 
 
 </div>
 
-### /dispatch-list-tasks
+### /dispatch-list-tasks {#dispatch-list-tasks}
 
 Use `/dispatch-list-tasks` to display a temporary message listing all tasks associated with the incident.
 
@@ -169,11 +169,11 @@ Use `/dispatch-list-tasks` to display a temporary message listing all tasks asso
 
 </div>
 
-## Incident resources and metadata
+## Incident resources and metadata {#incident-resources-and-metadata}
 
 These commands help manage incident resources and metadata (data about the incident).
 
-### /dispatch-update-incident
+### /dispatch-update-incident {#dispatch-update-incident}
 
 This command allows the IC to modify several aspects of the incident without ever leaving the conversation interface.
 
@@ -183,7 +183,7 @@ This command allows the IC to modify several aspects of the incident without eve
 
 </div>
 
-### /dispatch-add-timeline-event
+### /dispatch-add-timeline-event {#dispatch-add-timeline-event}
 
 This command helps you add an event to the incident timeline. You may use local time (derived from your Slack profile) or Coordinated Universal Time (UTC).
 
@@ -193,7 +193,7 @@ This command helps you add an event to the incident timeline. You may use local 
 
 </div>
 
-### /dispatch-list-workflows
+### /dispatch-list-workflows {#dispatch-list-workflows}
 
 This command will list all workflows associated with the current incident.
 
@@ -203,7 +203,7 @@ This command will list all workflows associated with the current incident.
 
 </div>
 
-### /dispatch-run-workflow
+### /dispatch-run-workflow {#dispatch-run-workflow}
 
 This command will run a pre-configured workflow and associate its artifacts with the current incident.
 
@@ -213,7 +213,7 @@ This command will run a pre-configured workflow and associate its artifacts with
 
 </div>
 
-### /dispatch-create-task
+### /dispatch-create-task {#dispatch-create-task}
 
 This command will create a task for the current incident.
 <div style={{textAlign: 'center'}}>
@@ -223,7 +223,7 @@ This command will create a task for the current incident.
 
 </div>
 
-### /dispatch-create-case
+### /dispatch-create-case {#dispatch-create-case}
 
 This command will create a case for the current incident.
 
@@ -233,25 +233,25 @@ This command will create a case for the current incident.
 
 {/* The sections below have no screenshot yet; capturing one needs a live Slack workspace. See issue #135. */}
 
-### /dispatch-update-case
+### /dispatch-update-case {#dispatch-update-case}
 
 Run `/dispatch-update-case` from a case's channel to open a modal for its title, description, resolution and resolution reason, assignee, status, type, priority and visibility.
 
 A case cannot be escalated from here — the status select deliberately omits `Escalated`. Use [`/dispatch-escalate-case`](#dispatch-escalate-case) instead, which creates the incident the case becomes.
 
-### /dispatch-escalate-case
+### /dispatch-escalate-case {#dispatch-escalate-case}
 
 Run `/dispatch-escalate-case` from a case's channel to turn it into an incident. The modal opens pre-filled from the case — its title, description and project — so you can accept the defaults or adjust them, then pick the incident's type, priority and severity.
 
 Dispatch tells you and does nothing if the case has already been escalated; a case escalates once.
 
-### /dispatch-engage-user
+### /dispatch-engage-user {#dispatch-engage-user}
 
 Run `/dispatch-engage-user` from a case's channel to ask someone to confirm their identity through your multi-factor provider — the usual case being a report that some account did something its owner may not have done.
 
 Pick the person and edit the message they will see, or accept the default. Dispatch adds them to the case if they are not already on it, then sends the prompt and reports the outcome back in the channel. It says so in the channel instead if the person has no account in your Slack workspace.
 
-### /dispatch-list-incidents
+### /dispatch-list-incidents {#dispatch-list-incidents}
 
 Use `/dispatch-list-incidents` to open a modal listing every incident that is currently active or stable, plus any incident closed in the last 24 hours. Each entry links to the incident in Dispatch and shows its commander, project, status, type, severity, and priority.
 
@@ -259,13 +259,13 @@ Run inside an incident channel, it lists that incident's project. Run anywhere e
 
 Restricted incidents are never listed, and the modal shows at most 49 incidents; use the Dispatch web interface if your deployment has more.
 
-### /dispatch-list-signals
+### /dispatch-list-signals {#dispatch-list-signals}
 
 Use `/dispatch-list-signals` to see which signal definitions send their cases to the conversation you run it from. It opens a modal listing every definition whose case type targets that conversation, showing each one's name and variant alongside a [Snooze](../../administration/settings/signal/filter.mdx#snooze-filter) button that temporarily stops it creating cases. Longer lists are paged 25 at a time.
 
 The command takes no arguments. If no case type targets that conversation, the modal tells you so.
 
-### /dispatch-summary
+### /dispatch-summary {#dispatch-summary}
 
 Use `/dispatch-summary` in an incident or case channel to get an AI-generated read-in summary of what has happened so far. It is most useful when you are pulled in late or take the incident over partway through. The summary is shown only to you, and Dispatch labels it as AI-generated — check it before you act on it.
 

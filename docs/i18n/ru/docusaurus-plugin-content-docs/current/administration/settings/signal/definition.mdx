@@ -1,0 +1,68 @@
+# Определение сигнала
+
+Определения сигналов — отправная точка для подключения нового сигнала к Dispatch; они поддерживают множество параметров настройки.
+
+## Отправка сигналов в Dispatch {#sending-signals-to-dispatch}
+
+Чтобы отправить сигнал в Dispatch, выполните `POST`-запрос к API по адресу `/{organization}/signals/instances`.
+
+```python
+import requests
+
+API_TOKEN = ""
+API_ENDPOINT = "http://localhost:8080/api/v1/default/signals/instances"
+
+signal_instance = {
+  "project": "Test",
+  "raw": {
+    "name": "process_events",
+    "externalId": "someExternalValue",
+    "id": "<uuid>", # this will be used as the instance's uuid if provided
+    "variant": "A" , # an additional indicator for signal subtypes
+    "hostIdentifier": "host1",
+    "calendarTime": "2022-10-19T10:35:01Z",
+    "time": 1618698901,
+    "columns": {
+      "pid": 888,
+      "path": "/usr/bin/security",
+      "cmdline": "/usr/bin/security dump-keychain",
+      "state": "running",
+      "parent": 555,
+      "created_at": 1918698901,
+      "updated_at": 2118698901
+    }
+  }
+}
+
+requests.Session()
+r = session.post(
+    API_ENDPOINT,
+    json=signal_instance,
+    headers={
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {API_TOKEN}",
+    },
+)
+```
+
+:::note
+
+Полная документация API для `/instances` доступна в [справочнике API](https://helldweller.github.io/dispatch/docs/api#tag/signals/operation/create_signal_instance__organization__signals_instances_post).
+
+:::
+
+## Создание определения сигнала {#creating-a-signal-definition}
+
+В общих чертах вам нужно задать базовые метаданные `signal`: название, описание и вариант.
+Также можно указать, должен ли `signal` создавать кейс. Отказ от создания кейса полезен для контекстных сигналов, которые
+сами по себе не требуют разбора и расследования. При этом такие сигналы всё равно можно использовать для обогащения других сигналов и кейсов.
+
+![](/img/admin-ui-signal-definition.png)
+
+**Вариант (Variant)**: у одного сигнала может быть несколько вариантов с разными определениями.
+
+**Владелец (Owner)**: как правило, команда или владелец, который порождает сигнал.
+
+**Внешний идентификатор (External ID)**: по этому идентификатору входящие сигналы сопоставляются с этим определением. Он должен быть уникальным среди всех определений сигналов.
+
+**Целевой канал (Conversation Target)**: задаёт название канала, в котором будет создан кейс для сигнала.

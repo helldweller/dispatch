@@ -1,0 +1,107 @@
+---
+description: Страница настройки всех плагинов G Suite.
+---
+
+# Настройка интеграции с G Suite
+
+:::info
+Dispatch поставляется с несколькими плагинами G Suite \(Docs, Groups, Drive и др.\). На этой странице описаны доступные параметры
+этих плагинов и разрешения, которые нужны, чтобы их включить.
+:::
+
+## Настройка Dispatch {#dispatch-configuration}
+
+Плагины G Suite настраиваются в веб-интерфейсе Dispatch в разделе «Настройки» -> «Проект» -> «Плагины» (Settings -> Project -> Plugins). Добавьте нужные плагины кнопкой `NEW`, затем откройте их настройки, нажав на три вертикальные точки.
+
+### Developer Key {#developer-key}
+
+> Используется службой Google API Discovery Service и защищает от ограничения частоты запросов.
+
+### Service Account Client Email {#service-account-client-email}
+
+> Значение `client_email` из файла конфигурации сервисного аккаунта Google Cloud Platform \(GCP\).
+
+### Service Account Client Id {#service-account-client-id}
+
+> Значение `client_id` из файла конфигурации сервисного аккаунта Google Cloud Platform \(GCP\).
+
+### Service Account Delegated Account {#service-account-delegated-account}
+
+> Аккаунт, которому делегируются права от сервисного аккаунта Google Cloud Platform \(GCP\).
+> Исходящие письма и другие артефакты будут выглядеть отправленными от этого аккаунта.
+
+### Service Account Private Key {#service-account-private-key}
+
+> Значение `private_key` из файла конфигурации сервисного аккаунта Google Cloud Platform \(GCP\).
+
+### Service Account Private Key Id {#service-account-private-key-id}
+
+> Значение `private_key_id` из файла конфигурации сервисного аккаунта Google Cloud Platform \(GCP\).
+
+### Service Account Project Id {#service-account-project-id}
+
+> Значение `project_id` из файла конфигурации сервисного аккаунта Google Cloud Platform \(GCP\).
+
+### Google Workspace Domain {#google-workspace-domain}
+
+> Базовый домен, к которому относится этот сервисный аккаунт Google Cloud Platform \(GCP\).
+
+### Default Event Duration (Minutes) {#default-event-duration-minutes}
+
+> Длительность событий конференций по умолчанию в минутах. По умолчанию 1440 минут (1 день).
+
+## Настройка G Suite {#g-suite-setup}
+
+Чтобы настроить интеграцию с G Suite, создайте несколько ресурсов в Google Cloud Platform и привяжите их к своей
+организации G Suite.
+
+## Включение необходимых API в Google Cloud Platform {#enable-required-apis-in-google-cloud-platform}
+
+Откройте [консоль](https://console.cloud.google.com/) Google Cloud Platform \(GCP\). Для интеграции с Dispatch
+создайте новый проект GCP.
+
+Создайте новый сервисный аккаунт внутри проекта GCP \(APIs & Services &gt; Credentials &gt; Create Credentials &gt; Service Account\).
+Назначать этому сервисному аккаунту какие-либо разрешения Google Cloud, когда вас об этом спросят, не нужно.
+
+После создания скачайте ключ в формате JSON. Его значения понадобятся для настройки Dispatch:
+
+- `project_id` -&gt; Service Account Project Id
+- `private_key_id` -&gt; Service Account Private Key Id
+- `private_key` -&gt; Service Account Private Key
+- `client_email` -&gt; Service Account Client Email
+- `client_id` -&gt; Service Account Client Id
+
+Затем создайте API-ключ разработчика \(APIs & Services &gt; Credentials &gt; Create Credentials &gt; API Key\) и укажите его в поле Developer Key.
+
+Включите следующие API \(APIs and Services &gt; Library\):
+
+- Google Drive API
+- Google Drive Activity API
+- Google People API
+- Google Docs API
+- Google Calendar API
+- Gmail API
+- Admin SDK \(нужен для создания групп и управления ими\)
+
+Наконец, создайте OAuth-приложение — через него G Suite будет авторизовать сервисный аккаунт и API-ключ \(APIs & Services &gt; OAuth Consent Screen\).
+Укажите следующие скоупы:
+
+```text
+https://www.googleapis.com/auth/documents
+https://www.googleapis.com/auth/drive
+https://www.googleapis.com/auth/directory.readonly
+https://www.googleapis.com/auth/drive.activity.readonly
+https://mail.google.com/
+https://www.googleapis.com/auth/admin.directory.group
+https://www.googleapis.com/auth/apps.groups.settings
+https://www.googleapis.com/auth/calendar
+```
+
+**Примечание.** Если вы не собираетесь использовать Google Meet для конференций, скоуп `https://www.googleapis.com/auth/calendar` вам не нужен.
+
+## Подключение Dispatch к G Suite {#connecting-dispatch-to-g-suite}
+
+Откройте в админ-панели G Suite страницу [Domain-wide Delegation](https://admin.google.com/ac/owl/domainwidedelegation)
+\(Security &gt; API Controls &gt; Domain-wide Delegation\) (делегирование на уровне домена) и добавьте нового API-клиента.
+
+Введите Client ID, который вы указали в поле Service Account Client Id, и вставьте список OAuth-скоупов, приведённых выше, через запятую.

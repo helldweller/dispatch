@@ -1,0 +1,41 @@
+---
+description: Параметры настройки плагина Jira.
+---
+
+# Настройка Jira
+
+:::info
+Dispatch из коробки поддерживает Jira. Каждая установка Jira уникальна, поэтому, скорее всего, вы захотите создать плагин Jira под свою организацию. Для базовой функциональности этот плагин не обязателен. Однако плагин типа `ticket` должен быть включён всегда.
+:::
+
+## Конфигурация Dispatch {#dispatch-configuration}
+
+Плагин Jira настраивается в веб-интерфейсе Dispatch: «Настройки» -> «Проект» -> «Плагины». Добавьте плагин кнопкой `NEW` и затем отредактируйте его конфигурацию, нажав на три вертикальные точки.
+
+### Идентификатор или ключ проекта по умолчанию (Default Project Id or Key) {#default-project-id-or-key}
+
+> Задаёт проект Jira по умолчанию. Найти идентификатор проекта Jira можно [так](https://community.atlassian.com/t5/Jira-questions/JIRA-Project-ID/qaq-p/193094) или [так](https://confluence.atlassian.com/jirakb/how-to-get-project-id-from-the-jira-user-interface-827341414.html).
+
+### Имя типа задачи по умолчанию (Default Issue Type Name) {#default-issue-type-name}
+
+> Задаёт имя типа задачи Jira по умолчанию.
+
+### Тип размещения (Hosting Type) {#hosting-type}
+
+> Задаёт тип установки (`cloud` или `server`). По умолчанию `cloud`.
+
+### Имя пользователя (Username) {#username}
+
+> Имя пользователя для аутентификации в Jira API.
+
+### Пароль (Password) {#password}
+
+> Пароль для аутентификации в Jira API.
+
+### URL API (API URL) {#api-url}
+
+> Этот URL используется для обращения к Jira API.
+
+### URL для браузера (Browser URL) {#browser-url}
+
+> Этот URL используется для построения ссылок, открываемых в браузере.

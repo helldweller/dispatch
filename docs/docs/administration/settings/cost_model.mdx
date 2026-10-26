@@ -10,27 +10,27 @@ If an incident type does not have a specific cost model assigned, the default cl
 
 </div>
 
-## Key Features
+## Key Features {#key-features}
 
-### Customizable Cost Models
+### Customizable Cost Models {#customizable-cost-models}
 Users have the flexibility to define their unique cost models based on their organization's workflow and tools. This customization can be tailored to each incident type, providing a versatile approach to cost calculation. The cost model for an incident type can be changed at any time. When cost model changes are made to the incident type or an incident changes its type, all participant activity costs moving forward will be calculated using the new cost model.
 
-### Plugin-Based Tracking
+### Plugin-Based Tracking {#plugin-based-tracking}
 Users can track costs from their existing tools by using our plugin-based tracking system. Users have the flexibility to select which plugins and specific plugin events they want to track, offering a targeted approach to cost calculation.
 
-### Effort Assignment
+### Effort Assignment {#effort-assignment}
 For each tracked activity, users can assign a quantifiable measure of effort, represented in seconds of work time. This feature provides a more accurate representation of the cost of an incident.
 
-### Incident Cost Calculation
+### Incident Cost Calculation {#incident-cost-calculation}
 Incident cost calculation is based on the cost model and effort assignment for each tracked participant activity. This helps in understanding resource utilization and cost of an incident.
 
 
-## Currently Supported Plugin Events
+## Currently Supported Plugin Events {#currently-supported-plugin-events}
 
-### Slack: Channel Activity
+### Slack: Channel Activity {#slack-channel-activity}
 This event tracks activity within a specific Slack channel. By periodically polling channel messages, this gathers insights into the activity and engagement levels of each participant.
 
-### Slack: Thread Activity
+### Slack: Thread Activity {#slack-thread-activity}
 This event tracks activity within a specific Slack thread. By periodically polling thread replies, this gathers insights into the activity and engagement levels of each participant.
 
 
@@ -40,7 +40,7 @@ This event tracks activity within a specific Slack thread. By periodically polli
 
 </div>
 
-## Cost Calculation Examples
+## Cost Calculation Examples {#cost-calculation-examples}
 
 Below, we illustrate the use of the cost model through two examples. These are based on the following values:
 
@@ -55,7 +55,7 @@ The employee hourly rate can be adjusted by modifying the `Annual Employee Cost`
 hourly_rate = 100
 ```
 
-#### Example 1
+#### Example 1 {#example-1}
 
 Consider the following Slack channel activity for `Incident 1`:
 
@@ -78,7 +78,7 @@ The incident cost is then calculated as:
 ( (400 - 100) + (500 - 200) ) / SECONDS_IN_HOUR * hourly_rate = $16.67
 ```
 
-#### Example 2
+#### Example 2 {#example-2}
 
 Consider the following Slack channel activity for `Incident 2`:
 

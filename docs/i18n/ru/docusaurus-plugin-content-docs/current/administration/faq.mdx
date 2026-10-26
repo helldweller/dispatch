@@ -1,0 +1,15 @@
+# Частые вопросы
+
+## Команда «dispatch database upgrade» как будто зависла. {#running-dispatch-database-upgrade-seems-stuck}
+
+Скорее всего, обновление зависло потому, что какой-то запрос к базе данных держит блокировку, которая нужна миграции.
+
+Чтобы разобраться, подключитесь к базе данных Dispatch и выполните:
+
+> SELECT \* FROM pg_locks l INNER JOIN pg_stat_activity s ON \(l.pid = s.pid\) WHERE waiting AND NOT granted;
+
+Запрос вернёт список запросов, которые сейчас ждут выполнения. Найдите среди них PID запроса, который блокирует миграцию, и выполните:
+
+> select pg_terminate_backend\(&lt;blocking-pid&gt;\);
+
+Подробнее: [http://stackoverflow.com/questions/22896496/alembic-migration-stuck-with-postgresql](http://stackoverflow.com/questions/22896496/alembic-migration-stuck-with-postgresql).

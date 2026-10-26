@@ -2,7 +2,7 @@
 
 Dispatch supports sending email notifications to participants of, for example, an incident.
 
-## Notification templates
+## Notification templates {#notification-templates}
 
 Templates for emails are [part](https://github.com/helldweller/dispatch/tree/main/src/dispatch/messaging/email/templates) of Dispatch
 and are [Jinja](https://jinja.palletsprojects.com/) templates that during runtime are compiled into [MJML](https://mjml.io/) format.
@@ -33,7 +33,7 @@ otherwise the resolution process will gracefully fall back to the default templa
 dispatch/messaging/email/templates/base.mjml
 ```
 
-## Markdown in the notifications
+## Markdown in the notifications {#markdown-in-the-notifications}
 
 :::warning
 Watch out for security implications related to unescaped HTML that may propagate through the system.

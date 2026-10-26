@@ -1,0 +1,48 @@
+---
+description: Как получить полезные метрики по инцидентам.
+sidebar_position: 1
+---
+
+# Инциденты
+
+## Сводные ключевые метрики {#aggregated-top-line-metrics}
+
+<div style={{textAlign: 'center'}}>
+
+![](/img/admin-ui-dashboard-top-line.png)
+
+</div>
+
+Эти метрики агрегируются по всем инцидентам, попавшим под текущий фильтр.
+
+## Разбивка по ключевым признакам инцидентов {#breakdown-on-key-incident-facets}
+
+### По типу инцидента {#by-incident-type}
+
+<div style={{textAlign: 'center'}}>
+
+![](/img/admin-ui-dashboard-type.png)
+
+</div>
+
+### По приоритету инцидента {#by-incident-priority}
+
+<div style={{textAlign: 'center'}}>
+
+![](/img/admin-ui-dashboard-priority.png)
+
+</div>
+
+## Прогнозирование {#forecasting}
+
+Dispatch умеет строить _простые_ прогнозы. Он смотрит на историю прошлых инцидентов и применяет [экспоненциальное сглаживание](https://machinelearningmastery.com/exponential-smoothing-for-time-series-forecasting-in-python/#:~:text=Exponential%20smoothing%20is%20a%20time%20series%20forecasting%20method%20for%20univariate%20data.&text=Exponential%20smoothing%20forecasting%20methods%20are,decreasing%20weight%20for%20past%20observations), чтобы оценить, сколько инцидентов ждать в будущем.
+
+При небольшом числе инцидентов прогноз получается посредственным, но с ростом объёма данных он становится точнее. Если данных для разумного прогноза недостаточно, в интерфейсе он не показывается.
+
+Пример прогноза:
+
+<div style={{textAlign: 'center'}}>
+
+![](/img/admin-ui-dashboard-forecast.png)
+
+</div>

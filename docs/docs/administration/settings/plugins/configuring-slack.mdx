@@ -6,7 +6,7 @@ description: Configuration options for the Slack plugin.
 
 Dispatch ships with support for Slack. Below is how to configure the Slack plugin to work with `Dispatch`.
 
-## Events Mode vs Socket Mode
+## Events Mode vs Socket Mode {#events-mode-vs-socket-mode}
 
 Dispatch supports both [Events Mode](https://api.slack.com/events-api) and [Socket Mode](https://api.slack.com/apis/connections/socket).
 
@@ -17,7 +17,7 @@ Which mode should you choose?
 
 See the [Dispatch Configuration](#dispatch-configuration) section below for further details on the variables.
 
-### Events Mode
+### Events Mode {#events-mode}
 
 Events mode requires specific URL mapping that must be **publicly** accessible:
 
@@ -25,7 +25,7 @@ Events mode requires specific URL mapping that must be **publicly** accessible:
 - `Dispatch` receives command events at the `/api/v1/<organization>/events/slack/command` endpoint (`/dispatch-*` commands)
 - `Dispatch` receives action events at the `/api/v1/<organization>/events/slack/action` endpoint (dialogs and modals).
 
-### Socket Mode
+### Socket Mode {#socket-mode}
 
 To enable socket mode, add the socket mode app token in the `Socket Mode App Token` section of the `Slack Plugin - Conversation Management` and the `Slack Plugin - Contact Information Resolver` plugins Dispatch Web UI under Settings -> Project -> Plugins.
 
@@ -41,11 +41,11 @@ dispatch server slack <organization> <project>
 
 This process has to be daemonized similarly to the Dispatch webserver.
 
-## Slack Configuration
+## Slack Configuration {#slack-configuration}
 
 You will need to set the following configuration settings for your Slack app in the [Slack API Web UI](https://api.slack.com/apps) for both `events mode` and `socket mode`.
 
-### Event Subscriptions
+### Event Subscriptions {#event-subscriptions}
 
 To enable Dispatch to process Slack events, under `Events Subscriptions`, ensure that the `Request URL` points to the events subscription API endpoint of the Dispatch server at `/api/v1/<organization>/events/slack/event`. Replace `<organization>` with your organization's name. The default one is `default`.
 
@@ -57,17 +57,17 @@ Then, under the `Subscribe to bot events` section, add the following bot user ev
 | member_left_channel   | A user left a public or private channel   |
 | message.groups        | A message was posted to a private channel |
 
-### Interactivity
+### Interactivity {#interactivity}
 
 To enable Dispatch to generate interactive components such as dialogs and modals, ensure that the `Request URL` points to the events action API endpoint of the Dispatch server at `/api/v1/<organization>/events/slack/action`. Replace `<organization>` with your organization's name. The default one is `default`.
 
-### Select Menus
+### Select Menus {#select-menus}
 
 On the same `Interactivity & Shortcuts` page, under `Select Menus`, set the `Options Load URL` to `/api/v1/<organization>/events/slack/menu`. Replace `<organization>` with your organization's name. The default one is `default`.
 
 This is a separate field from the `Request URL` above and does not inherit from it. Dispatch uses it for the type-ahead menus that load their choices on demand rather than embedding them in the modal: tag selection, and project selection in deployments with more than 100 enabled projects. If it is unset, those menus open empty and stay empty, and because the field is required the form cannot be submitted.
 
-### Slash Commands
+### Slash Commands {#slash-commands}
 
 To enable Dispatch's slash commands, you must add them to your Slack app first. Ensure that the `Command` field in the Slack API Web UI matches the name of the command name in the Slack plugin in the Dispatch Web UI and that the `Request URL` points to the events command API endpoint of the Dispatch server at `/api/v1/<organization>/events/slack/command`.
 
@@ -89,11 +89,11 @@ To enable Dispatch's slash commands, you must add them to your Slack app first. 
 
 </div>
 
-### OAuth & Permissions
+### OAuth & Permissions {#oauth--permissions}
 
 The `Bot User OAuth Access Token` is used to issue queries against the Slack API.
 
-#### Scopes
+#### Scopes {#scopes}
 
 The following are the bot and user scopes required for the Dispatch Slack App to function correctly.
 
@@ -132,41 +132,41 @@ groups:history
 groups:read
 ```
 
-## Dispatch Configuration
+## Dispatch Configuration {#dispatch-configuration}
 
 The Dispatch Slack plugins for conversation management and resolving contact information are configured in the Dispatch Web UI under Settings -> Project -> Plugins. Add the desired plugin(s) using the `NEW` button and then edit the plugin(s) configuration by clicking on the three vertical dots.
 
-### Conversation Management Plugin
+### Conversation Management Plugin {#conversation-management-plugin}
 
-#### API Bot Token
+#### API Bot Token {#api-bot-token}
 
 > The Slack app's bot token necessary to communicate with the Slack API. Slack refers to this as your "Bot User OAuth Access Token" and should be revealed to app collaborators when installing the app.
 
-#### Socket Mode App Token
+#### Socket Mode App Token {#socket-mode-app-token}
 
 > The Slack app's socket mode token provided when socket mode is enabled to authenticate to the WebSocket API. Its value will be ignored if socket mode is not used.
 
-#### Signing Secret
+#### Signing Secret {#signing-secret}
 
 > The secret used to verify signatures included on each HTTP request that Slack sends. Slack refers to this as your "Signing Secret."
 
-#### App User Id
+#### App User Id {#app-user-id}
 
 > The Slack app's bot user id so that Dispatch can filter events generated by the app's user \(e.g., message posted in the channel\). You can use the [auth.test](https://api.slack.com/methods/auth.test/test) endpoint and the app's bot token \(`xoxb-*`\) to get the bot user-id \(`UXXXXXXXX`\)."
 
-#### Private Channels
+#### Private Channels {#private-channels}
 
 > Whether you want Dispatch to create public or private incident Slack channels.
 
-#### Ban Threads
+#### Ban Threads {#ban-threads}
 
 > Whether you want Dispatch to allow or ban threaded messages in incident channels.
 
-#### Timeline Event Reaction
+#### Timeline Event Reaction {#timeline-event-reaction}
 
 > The reaction used for adding Slack messages posted in the incident channel to the incident timeline.
 
-#### Command Strings
+#### Command Strings {#command-strings}
 
 > The name of the slash commands that your Slack app will expose.
 
@@ -203,29 +203,29 @@ You can override their values if you wish to do so. Included below are their des
 | `/dispatch-engage-user`                                                             | Opens a modal to ask a case participant to confirm their identity with MFA. Run from a case channel.                        |
 | `/dispatch-summary`                                                                 | If allowed for this case/incident type, will create an AI-generated read-in summary.                                        |
 
-### Contact Information Resolver Plugin
+### Contact Information Resolver Plugin {#contact-information-resolver-plugin}
 
-#### API Bot Token
+#### API Bot Token {#api-bot-token-1}
 
 > The Slack app's bot token necessary to communicate with the Slack API. Slack refers to this as your "Bot User OAuth Access Token" and should be revealed to app collaborators when installing the app.
 
-#### Socket Mode App Token
+#### Socket Mode App Token {#socket-mode-app-token-1}
 
 > The Slack app's socket mode token provided when socket mode is enabled to authenticate to the WebSocket API. Its value will be ignored if socket mode is not used.
 
-#### Signing Secret
+#### Signing Secret {#signing-secret-1}
 
 > The secret used to verify signatures included on each HTTP request that Slack sends. Slack refers to this as your "Signing Secret."
 
-#### Profile Department Field Id
+#### Profile Department Field Id {#profile-department-field-id}
 
 > The profile field ID where Department is mapped.
 
-#### Profile Team Field Id
+#### Profile Team Field Id {#profile-team-field-id}
 
 > The profile field ID where the Team is mapped.
 
-#### Profile Weblink Field Id
+#### Profile Weblink Field Id {#profile-weblink-field-id}
 
 > The profile field ID where the weblink is mapped.
 

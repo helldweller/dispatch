@@ -1,0 +1,54 @@
+{
+  "version.label": {
+    "message": "Next",
+    "description": "The label for version current"
+  },
+  "sidebar.adminSidebar.category.Settings": {
+    "message": "Настройки",
+    "description": "The label for category 'Settings' in sidebar 'adminSidebar'"
+  },
+  "sidebar.adminSidebar.category.Incident": {
+    "message": "Инциденты",
+    "description": "The label for category 'Incident' in sidebar 'adminSidebar'"
+  },
+  "sidebar.adminSidebar.category.Case": {
+    "message": "Кейсы",
+    "description": "The label for category 'Case' in sidebar 'adminSidebar'"
+  },
+  "sidebar.adminSidebar.category.Signal": {
+    "message": "Сигналы",
+    "description": "The label for category 'Signal' in sidebar 'adminSidebar'"
+  },
+  "sidebar.adminSidebar.category.Contact": {
+    "message": "Контакты",
+    "description": "The label for category 'Contact' in sidebar 'adminSidebar'"
+  },
+  "sidebar.adminSidebar.category.Data": {
+    "message": "Данные",
+    "description": "The label for category 'Data' in sidebar 'adminSidebar'"
+  },
+  "sidebar.adminSidebar.category.Knowledge": {
+    "message": "Знания",
+    "description": "The label for category 'Knowledge' in sidebar 'adminSidebar'"
+  },
+  "sidebar.adminSidebar.category.settings-plugins": {
+    "message": "Плагины",
+    "description": "The label for category 'Plugins' in sidebar 'adminSidebar'"
+  },
+  "sidebar.adminSidebar.category.Contributing": {
+    "message": "Разработка (на английском)",
+    "description": "The label for category 'Contributing' in sidebar 'adminSidebar'"
+  },
+  "sidebar.adminSidebar.category.contributing-plugins": {
+    "message": "Плагины (на английском)",
+    "description": "The label for category 'Plugins' in sidebar 'adminSidebar'"
+  },
+  "sidebar.userGuideSidebar.category.Dashboards": {
+    "message": "Дашборды",
+    "description": "The label for category 'Dashboards' in sidebar 'userGuideSidebar'"
+  },
+  "sidebar.userGuideSidebar.category.Incidents": {
+    "message": "Инциденты",
+    "description": "The label for category 'Incidents' in sidebar 'userGuideSidebar'"
+  }
+}

@@ -1,0 +1,25 @@
+---
+description: Параметры настройки плагина Duo.
+---
+
+# Настройка Duo
+
+:::info
+Dispatch из коробки поддерживает Duo для дополнительных проверок многофакторной аутентификации внутри приложения — например, при создании правила отсрочки. Для базовой функциональности этот плагин не обязателен.
+:::
+
+## `Integration Key` \[Обязательный. Секрет: да\] {#integration-key-required-secret-true}
+
+> Ключ интеграции Auth API ('DI...').
+
+## `Integration Secret Key` \[Обязательный. Секрет: да\] {#integration-secret-key-required-secret-true}
+
+> Секретный токен, используемый вместе с ключом интеграции.
+
+## `API Hostname` \[Обязательный\] {#api-hostname-required}
+
+> Имя хоста API ('api-....duosecurity.com')
+
+## Настройка Duo {#duo-setup}
+
+Войдите в Duo Admin Panel (панель администратора Duo) и откройте `Applications`. Нажмите `Protect an Application` и найдите в списке приложений запись Auth API. Нажмите `Protect` справа, чтобы настроить приложение и получить `integration key`, `secret key` и `API hostname`.
