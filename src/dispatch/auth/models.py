@@ -8,7 +8,7 @@ from uuid import uuid4
 import bcrypt
 from jose import jwt
 from pydantic import field_validator
-from pydantic import EmailStr
+from pydantic import EmailStr, Field
 
 from sqlalchemy import DateTime, Column, String, LargeBinary, Integer, Boolean
 from sqlalchemy.dialects.postgresql import UUID
@@ -140,6 +140,8 @@ class DispatchUserSettings(Base, TimeStampMixin):
     dispatch_user = relationship(DispatchUser, backref="settings")
 
     auto_add_to_incident_bridges = Column(Boolean, default=True)
+    # UI language (BCP 47 tag such as "en" or "ru"); None means "follow the browser".
+    locale = Column(String, nullable=True)
 
 
 class UserProject(DispatchBase):
@@ -343,6 +345,7 @@ class UserSettingsBase(DispatchBase):
     """Base Pydantic model for user settings."""
 
     auto_add_to_incident_bridges: bool = True
+    locale: str | None = Field(None, max_length=16)
 
 
 class UserSettingsRead(UserSettingsBase):

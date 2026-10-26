@@ -1,5 +1,6 @@
 import { parseISO, formatISO } from "date-fns"
 import moment from "moment-timezone"
+import { currentLocale } from "@/i18n"
 
 const time_format = "YYYY-MM-DD HH:mm:ss"
 const zones_to_show = ["America/Los_Angeles", "America/New_York"]
@@ -63,7 +64,7 @@ export function formatRelativeDate(value) {
       second: 1000,
     }
 
-    const rtf = new Intl.RelativeTimeFormat("en", {
+    const rtf = new Intl.RelativeTimeFormat(currentLocale(), {
       localeMatcher: "best fit", // other values: "lookup"
       numeric: "always", // other values: "auto"
       style: "long", // other values: "short" or "narrow"

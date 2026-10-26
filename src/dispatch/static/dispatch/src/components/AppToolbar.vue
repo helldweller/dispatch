@@ -13,7 +13,7 @@
       v-model="queryString"
       hide-details
       prepend-inner-icon="mdi-magnify"
-      label="Search"
+      :label="$t('Search')"
       clearable
       variant="solo"
       single-line
@@ -32,12 +32,14 @@
         hide-details
       >
         <v-icon start color="error">mdi-shield-search</v-icon>
-        <span class="text-uppercase text-body-2 font-weight-bold">Report Security Event</span>
+        <span class="text-uppercase text-body-2 font-weight-bold">{{
+          $t("Report Security Event")
+        }}</span>
       </v-btn>
       <v-btn icon variant="text" @click="toggleDarkTheme">
         <v-icon :icon="dark_theme ? 'mdi-white-balance-sunny' : 'mdi-moon-waxing-crescent'" />
         <v-tooltip activator="parent" location="bottom">
-          Dark Mode {{ dark_theme ? "Off" : "On" }}
+          {{ $t(dark_theme ? "Dark Mode Off" : "Dark Mode On") }}
         </v-tooltip>
       </v-btn>
       <v-btn icon variant="text">
@@ -47,13 +49,13 @@
             <v-list-item
               href="/api/v1/docs"
               target="_blank"
-              title="API Documentation"
+              :title="$t('API Documentation')"
               append-icon="mdi-open-in-new"
             />
             <v-list-item
               href="https://helldweller.github.io/dispatch/"
               target="_blank"
-              title="App Documentation"
+              :title="$t('App Documentation')"
               append-icon="mdi-open-in-new"
             />
             <v-list-item
@@ -63,7 +65,7 @@
               append-icon="mdi-open-in-new"
             >
               <v-list-item-title>
-                Current version: {{ formatHash(currentVersion())
+                {{ $t("Current version") }}: {{ formatHash(currentVersion())
                 }}{{
                   currentVersionDate() && currentVersionDate() !== "Unknown"
                     ? ` (${currentVersionDate()})`
@@ -93,19 +95,19 @@
                   <template #activator="{ props }">
                     <v-btn icon="mdi-logout" variant="plain" v-bind="props" @click="logout()" />
                   </template>
-                  <span>Logout</span>
+                  <span>{{ $t("Logout") }}</span>
                 </v-tooltip>
               </template>
             </v-list-item>
             <v-divider />
-            <v-list-subheader>User Preferences</v-list-subheader>
+            <v-list-subheader>{{ $t("User Preferences") }}</v-list-subheader>
             <v-switch
               v-model="currentUser().experimental_features"
               inset
               class="ml-5"
               color="blue"
               @update:model-value="updateExperimentalFeatures()"
-              label="Experimental Features"
+              :label="$t('Experimental Features')"
             />
             <v-switch
               v-model="bridgePreference"
@@ -113,10 +115,24 @@
               class="ml-5"
               color="blue"
               @click.stop
-              label="Add me automatically to incident bridges"
+              :label="$t('Add me automatically to incident bridges')"
             />
+            <v-list-subheader>{{ $t("Language") }}</v-list-subheader>
+            <v-btn-toggle
+              v-model="locale"
+              mandatory
+              density="compact"
+              variant="outlined"
+              divided
+              class="mx-5 mb-3"
+              @click.stop
+            >
+              <v-btn v-for="lang in languages" :key="lang.value" :value="lang.value" size="small">
+                {{ lang.text }}
+              </v-btn>
+            </v-btn-toggle>
             <v-divider />
-            <v-list-subheader>Organizations</v-list-subheader>
+            <v-list-subheader>{{ $t("Organizations") }}</v-list-subheader>
             <v-list-item v-for="(item, i) in organizations" :key="i">
               <v-list-item-title>{{ item.name }}</v-list-item-title>
               <v-list-item-subtitle>{{ item.description }}</v-list-item-subtitle>
@@ -131,7 +147,7 @@
                       @click="showCreateEditDialog(item)"
                     />
                   </template>
-                  <span>Edit Organization</span>
+                  <span>{{ $t("Edit Organization") }}</span>
                 </v-tooltip>
                 <v-tooltip location="bottom">
                   <template #activator="{ props }">
@@ -142,12 +158,12 @@
                       v-bind="props"
                     />
                   </template>
-                  <span>Switch Organization</span>
+                  <span>{{ $t("Switch Organization") }}</span>
                 </v-tooltip>
               </template>
             </v-list-item>
             <v-list-item @click="showCreateEditDialog()" prepend-icon="mdi-plus">
-              <v-list-item-title>Create a new organization</v-list-item-title>
+              <v-list-item-title>{{ $t("Create a new organization") }}</v-list-item-title>
             </v-list-item>
           </v-list>
         </v-menu>
@@ -165,6 +181,7 @@ import OrganizationCreateEditDialog from "@/organization/CreateEditDialog.vue"
 import UserApi from "@/auth/api"
 import CurrentUserAvatar from "@/atomics/CurrentUserAvatar.vue"
 import { mapFields } from "vuex-map-fields"
+import { SUPPORTED_LOCALES, setLocale } from "@/i18n"
 
 export default {
   name: "AppToolbar",
@@ -172,6 +189,7 @@ export default {
     organizations: [],
     query: "",
     dark_theme: false,
+    languages: SUPPORTED_LOCALES,
   }),
   setup() {
     return { formatHash }
@@ -209,6 +227,17 @@ export default {
             // Refresh user data to ensure UI is in sync with server
             this.$store.dispatch("auth/refreshCurrentUser")
           })
+      },
+    },
+    locale: {
+      get() {
+        return this.$i18n.locale
+      },
+      set(value) {
+        setLocale(value)
+        this.$store.dispatch("auth/updateUserSettings", { locale: value }).catch((error) => {
+          console.error("Error occurred while saving language preference: ", error)
+        })
       },
     },
     defaultUserProjects() {

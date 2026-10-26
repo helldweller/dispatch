@@ -9,14 +9,16 @@
       <report-dialog />
       <workflow-run-modal />
       <v-col>
-        <div class="text-h5">Incidents</div>
+        <div class="text-h5">{{ $t("Incidents") }}</div>
       </v-col>
       <v-col class="text-right">
         <table-filter-dialog :projects="defaultUserProjects" />
         <table-export-dialog />
         <v-btn nav variant="flat" color="error" :to="{ name: 'report' }" class="ml-2" hide-details>
           <v-icon start color="white">mdi-fire</v-icon>
-          <span class="text-uppercase text-body-2 font-weight-bold">Report incident</span>
+          <span class="text-uppercase text-body-2 font-weight-bold">{{
+            $t("Report incident")
+          }}</span>
         </v-btn>
         <v-btn
           v-if="userAdminOrAbove(current_user_role)"
@@ -35,7 +37,7 @@
             <v-text-field
               v-model="q"
               append-inner-icon="mdi-magnify"
-              label="Search"
+              :label="$t('Search')"
               single-line
               hide-details
               clearable
@@ -53,7 +55,7 @@
             :loading="loading"
             data-testid="incident-data-table"
             v-model="selected"
-            loading-text="Loading... Please wait"
+            :loading-text="$t('Loading... Please wait')"
             show-select
             return-object
             @click:row="showIncidentEditSheet"
@@ -115,19 +117,19 @@
                       params: { name: item.name },
                     }"
                   >
-                    <v-list-item-title>View / Edit</v-list-item-title>
+                    <v-list-item-title>{{ $t("View / Edit") }}</v-list-item-title>
                   </v-list-item>
                   <v-list-item @click="showReportDialog(item)" :disabled="item.status == 'Closed'">
-                    <v-list-item-title>Create Report</v-list-item-title>
+                    <v-list-item-title>{{ $t("Create Report") }}</v-list-item-title>
                   </v-list-item>
                   <v-list-item
                     @click="showRun({ type: 'incident', data: item })"
                     :disabled="item.status == 'Closed'"
                   >
-                    <v-list-item-title>Run Workflow</v-list-item-title>
+                    <v-list-item-title>{{ $t("Run Workflow") }}</v-list-item-title>
                   </v-list-item>
                   <v-list-item @click="showDeleteDialog(item)">
-                    <v-list-item-title>Delete</v-list-item-title>
+                    <v-list-item-title>{{ $t("Delete") }}</v-list-item-title>
                   </v-list-item>
                 </v-list>
               </v-menu>
@@ -185,20 +187,6 @@ export default {
 
   data() {
     return {
-      headers: [
-        { title: "Name", key: "name", align: "left", width: "10%" },
-        { title: "Title", key: "title", sortable: false },
-        { title: "Status", key: "status" },
-        { title: "Type", key: "incident_type.name" },
-        { title: "Severity", key: "incident_severity.name", width: "10%" },
-        { title: "Priority", key: "incident_priority.name", width: "10%" },
-        { title: "Project", key: "project.display_name", sortable: true },
-        { title: "Commander", key: "commander", sortable: false },
-        { title: "Cost", key: "incident_costs", sortable: false },
-        { title: "Reported At", key: "reported_at" },
-        { title: "Closed At", key: "closed_at" },
-        { title: "", key: "data-table-actions", sortable: false, align: "end" },
-      ],
       showEditSheet: false,
     }
   },
@@ -208,6 +196,22 @@ export default {
   },
 
   computed: {
+    headers() {
+      return [
+        { title: this.$t("Name"), key: "name", align: "left", width: "10%" },
+        { title: this.$t("Title"), key: "title", sortable: false },
+        { title: this.$t("Status"), key: "status" },
+        { title: this.$t("Type"), key: "incident_type.name" },
+        { title: this.$t("Severity"), key: "incident_severity.name", width: "10%" },
+        { title: this.$t("Priority"), key: "incident_priority.name", width: "10%" },
+        { title: this.$t("Project"), key: "project.display_name", sortable: true },
+        { title: this.$t("Commander"), key: "commander", sortable: false },
+        { title: this.$t("Cost"), key: "incident_costs", sortable: false },
+        { title: this.$t("Reported At"), key: "reported_at" },
+        { title: this.$t("Closed At"), key: "closed_at" },
+        { title: "", key: "data-table-actions", sortable: false, align: "end" },
+      ]
+    },
     ...mapFields("incident", [
       "table.loading",
       "table.options.descending",
