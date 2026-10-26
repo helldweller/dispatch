@@ -8,7 +8,7 @@ tags:
 
 Dispatch relies on multiple services to work, which are all orchestrated by `Docker Compose`.
 
-### Requirements
+### Requirements {#requirements}
 
 - [Docker](https://www.docker.com/) 17.05.0+
 - [Docker Compose](https://docs.docker.com/compose/) 1.19.0+
@@ -16,7 +16,7 @@ Dispatch relies on multiple services to work, which are all orchestrated by `Doc
 - At least 2400MB memory
 - 2 CPU Cores
 
-## Installing Dispatch Server
+## Installing Dispatch Server {#installing-dispatch-server}
 
 We strongly recommend using Docker for installing Dispatch and all its services. If you need to do something custom, you can use this repository as the basis of your setup. If you do not wish to use the Docker images we provide, you can still find Dispatch on PyPI; however, we don't recommend that method. You'll need to work your way back from the main Dispatch image. It is not too hard, but you are likely to spend a lot more time and hit some bumps.
 
@@ -46,7 +46,7 @@ To start, run the install script:
 Note: The `core` Docker service is not needed once the `web` and `schedule` services, which depend on it, are built.
 :::
 
-### The "first" user problem
+### The "first" user problem {#the-first-user-problem}
 
 For any new Dispatch installation, new users are expected to register themselves via the `/auth/register` endpoint in the Dispatch UI. By default, users registering via this method are granted regular "user" permissions within Dispatch. There is no direct way through the UI to allow a user to obtain an "Owner" role (as no other Owners exist to grant them access).
 
@@ -61,11 +61,11 @@ The default organization name in the sample data file is "default".
 
 After one owner user has been established, they can grant this role to others via the UI.
 
-## Going to Production
+## Going to Production {#going-to-production}
 
 Before you deploy Dispatch to production, there are a few considerations and steps that should be taken.
 
-### Basics
+### Basics {#basics}
 
 Because of the sensitivity of the information stored and maintained by Dispatch. You must follow standard host hardening practices:
 
@@ -74,21 +74,21 @@ Because of the sensitivity of the information stored and maintained by Dispatch.
 - Enable remote logging
 - Restrict access to the host
 
-### Credential Management
+### Credential Management {#credential-management}
 
 Dispatch plugins require API tokens to communicate with third-party resources. These tokens are stored in either an environment variable or in the Dispatch `.env` file.
 
 By default, these strings are in plain text, but Dispatch does provide hooks that allow for these credentials to be decrypted on server start. See the [Secret Provider](./settings/server.mdx#general) configuration option.
 
-### Authentication
+### Authentication {#authentication}
 
 Dispatch provides a "Basic" authentication provider that controls access via a username and password combination to get going quickly. By default, this provider allows for **open registration**, which means that anyone will be able to create a Dispatch account if they have network access to your server.
 
 Dispatch provides a "PKCE" authentication method to integrate existing and more robust SSO solutions for more robust authentication. See the [Authentication Provider](./settings/server.mdx#authentication)
 
-### TLS/SSL
+### TLS/SSL {#tlsssl}
 
-#### Nginx
+#### Nginx {#nginx}
 
 Nginx is a popular choice to serve a Python project:
 

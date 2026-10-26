@@ -24,7 +24,7 @@ To recover:
 Dispatch returns the stored client secret to the UI masked as `**********`, and saving the form writes back whatever it holds. Opening the Zoom plugin to change any other field — the API User Id, say — and saving will overwrite the client secret with those asterisks, and authentication then fails with `Invalid client_id or client_secret`. **Re-enter the Client Secret every time you save this form.** This affects every plugin with a secret field, not just Zoom.
 :::
 
-## Creating the Zoom app
+## Creating the Zoom app {#creating-the-zoom-app}
 
 1. In the [Zoom App Marketplace](https://marketplace.zoom.us/), sign in as an account admin and choose **Develop → Build App → Server-to-Server OAuth**. (The JWT app type this plugin once required can no longer be created.)
 2. Give the app a name, fill in the required basic information, and activate it.
@@ -44,33 +44,33 @@ Dispatch returns the stored client secret to the UI masked as `**********`, and 
    A missing scope is not reported when the token is issued — the token is granted and the API call fails afterwards, so add the scopes before configuring Dispatch.
 4. From **App Credentials**, copy the **Account ID**, **Client ID** and **Client Secret**.
 
-## Dispatch Configuration
+## Dispatch Configuration {#dispatch-configuration}
 
 The Zoom plugin is configured in the Dispatch Web UI under Settings -> Project -> Plugins. Add the plugin using the `NEW` button and then edit its configuration by clicking on the three vertical dots.
 
 Enter the credentials through that form only. Do not pass them on a command line or place them in a URL — Dispatch stores the client secret in an encrypted column, and either of those would leak it to shell history, process listings or proxy logs.
 
-### Zoom API User Id
+### Zoom API User Id {#zoom-api-user-id}
 
 > Email or user ID that meetings are created on behalf of.
 
-### Account ID
+### Account ID {#account-id}
 
 > Account ID of the Server-to-Server OAuth app, from its App Credentials page.
 
-### Client ID
+### Client ID {#client-id}
 
 > Client ID of the Server-to-Server OAuth app.
 
-### Client Secret
+### Client Secret {#client-secret}
 
 > Client secret of the Server-to-Server OAuth app. **Treat this as a credential** — anyone holding it can act on the account through the app's scopes. Rotate it in the Marketplace if it is ever exposed.
 
-### Default Meeting Duration (Minutes)
+### Default Meeting Duration (Minutes) {#default-meeting-duration-minutes}
 
 > Default duration in minutes for conference meetings. Defaults to 1440 minutes (1 day).
 
-## Validating the configuration
+## Validating the configuration {#validating-the-configuration}
 
 Create a test incident in a project with the plugin enabled and confirm a conference link appears. Any failure — authenticating, or the meeting call itself — is recorded on the incident timeline with the reason Zoom gave, and no conference is attached.
 
@@ -83,7 +83,7 @@ Create a test incident in a project with the plugin enabled and confirm a confer
 | `This API does not support client credentials for authorization` | Returned by the API, not the token endpoint: a `client_credentials` token was presented to an endpoint requiring account authorization. |
 | `The Zoom plugin configuration could not be read` | The plugin still holds the retired API Key / API Secret. See the upgrade note above. |
 
-## Notes
+## Notes {#notes}
 
 - Access tokens live one hour and Zoom issues no refresh token. Dispatch acquires a token per operation and reuses it for the calls that operation makes; tokens are never written to disk. Nothing needs rotating on a schedule apart from the client secret itself, at whatever interval your policy requires.
 - Zoom rate-limits meeting creation to **100 per day** against the configured API user, and meeting updates to **100 per day per meeting**. The first caps how many conference bridges a deployment can open in 24 hours account-wide; the second caps roster changes on a single long-running incident. Both surface as timeline errors rather than silent failures.

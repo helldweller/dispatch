@@ -1,0 +1,272 @@
+---
+description: Чего ожидать командиру инцидента.
+---
+
+# Командир
+
+## Сообщение об инциденте {#reporting}
+
+В Dispatch командиры инцидентов \(IC\) тоже являются участниками и получают все сообщения для участников. Когда вас назначают командиром инцидента, вам присваивается эта роль Dispatch, и сведения о вас передаются дальше.
+
+Ниже перечислены все команды Slack; также можно посмотреть _группы_ команд, связанных с [людьми](#people), [коммуникациями](#communications), [задачами](#tasks) и [ресурсами и метаданными инцидента](#incident-resources-and-metadata).
+
+## Все команды Slack {#all-slack-commands}
+
+- [`/dispatch-add-timeline-event`](#dispatch-add-timeline-event)
+- [`/dispatch-assign-role`](#dispatch-assign-role)
+- [`/dispatch-engage-oncall`](#dispatch-engage-oncall)
+- [`/dispatch-list-incidents`](#dispatch-list-incidents)
+- [`/dispatch-list-my-tasks`](#dispatch-list-my-tasks)
+- [`/dispatch-list-participants`](#dispatch-list-participants)
+- [`/dispatch-list-tasks`](#dispatch-list-tasks)
+- [`/dispatch-list-workflows`](#dispatch-list-workflows)
+- [`/dispatch-notifications-group`](#dispatch-notifications-group)
+- [`/dispatch-report-executive`](#dispatch-report-executive)
+- [`/dispatch-report-incident`](#dispatch-report-incident)
+- [`/dispatch-report-tactical`](#dispatch-report-tactical)
+- [`/dispatch-update-incident`](#dispatch-update-incident)
+- [`/dispatch-update-participant`](#dispatch-update-participant)
+- [`/dispatch-run-workflow`](#dispatch-run-workflow)
+- [`/dispatch-create-task`](#dispatch-create-task)
+- [`/dispatch-create-case`](#dispatch-create-case)
+- [`/dispatch-update-case`](#dispatch-update-case)
+- [`/dispatch-escalate-case`](#dispatch-escalate-case)
+- [`/dispatch-engage-user`](#dispatch-engage-user)
+- [`/dispatch-list-signals`](#dispatch-list-signals)
+- [`/dispatch-summary`](#dispatch-summary)
+
+## Люди {#people}
+
+Эти команды помогают управлять людьми, которые участвуют в разрешении инцидента.
+
+### /dispatch-assign-role {#dispatch-assign-role}
+
+Каждый, кто помогает вести инцидент, может выполнять разные роли. Например, вам может понадобиться протоколист или координатор для руководства, или вы можете передать инцидент новому командиру инцидента. В любом из этих случаев используйте `/dispatch-assign-role`, чтобы быстро назначить роль любому человеку.
+
+Особенно важно использовать эту команду при передаче командования инцидентом. Так не возникнет путаницы с тем, кто сейчас командир инцидента.
+
+<div style={{textAlign: 'center'}}>
+
+![](/img/slack-conversation-assign-role.png)
+
+</div>
+
+### /dispatch-engage-oncall {#dispatch-engage-oncall}
+
+Для разрешения инцидента вам понадобится помощь разных команд. Чтобы быстро подключить дежурного из другой команды, используйте `/dispatch-engage-oncall`: команда определит, кто сейчас дежурит, и при желании вызовет его.
+
+<div style={{textAlign: 'center'}}>
+
+![](/img/slack-conversation-engage-oncall.png)
+
+</div>
+
+### /dispatch-list-participants {#dispatch-list-participants}
+
+С помощью этой команды можно узнать, какие команды и люди подключены к инциденту. Результат выглядит так:
+
+<div style={{textAlign: 'center'}}>
+
+![](/img/slack-conversation-list-participants.png)
+
+</div>
+
+### /dispatch-update-participant {#dispatch-update-participant}
+
+Участникам инцидента или командиру инцидента может быть важно знать, в чём специализируется участник и какого вклада в разрешение инцидента от него ждут. Используйте `/dispatch-update-participant`, чтобы обновить причину, по которой участник был добавлен. Диалог выглядит так:
+
+<div style={{textAlign: 'center'}}>
+
+![](/img/slack-conversation-update-participant.png)
+
+</div>
+
+## Коммуникации {#communications}
+
+Эти команды помогают управлять коммуникациями по инциденту.
+
+### /dispatch-notifications-group {#dispatch-notifications-group}
+
+Группа уведомлений инцидента состоит из отдельных людей или списков рассылки. Управляйте этой группой с помощью `/dispatch-notifications-group.`
+
+<div style={{textAlign: 'center'}}>
+
+![](/img/slack-conversation-notifications-group.png)
+
+</div>
+
+### /dispatch-report-executive {#dispatch-report-executive}
+
+Некоторым заинтересованным лицам важен ход инцидента, но прямого участия от них не ждут. Например, финансовый директор может хотеть знать о текущем инциденте безопасности, связанном с финансовыми данными, но вряд ли будет руководить участниками и их действиями. Чтобы держать таких внешних заинтересованных лиц в курсе, используйте `/dispatch-report-executive`: команда поможет составить и разослать отчёт для руководства.
+
+<div style={{textAlign: 'center'}}>
+
+![](/img/slack-conversation-report-executive.png)
+
+</div>
+
+### /dispatch-report-incident {#dispatch-report-incident}
+
+Используйте `/dispatch-report-incident`, чтобы сообщить о новом инциденте.
+
+<div style={{textAlign: 'center'}}>
+
+![](/img/slack-conversation-report-incident.png)
+
+</div>
+
+### /dispatch-report-tactical {#dispatch-report-tactical}
+
+Регулярные тактические отчёты, например в формате «Условия, действия, потребности» (Conditions, Actions, and Needs — CAN), крайне важны, чтобы участники были в курсе происходящего. Используйте `/dispatch-report-tactical`, чтобы легко их создавать.
+
+Форма отчёта выглядит так:
+
+<div style={{textAlign: 'center'}}>
+
+![](/img/slack-conversation-status-report.png)
+
+</div>
+
+Результат в канале Slack выглядит так:
+
+<div style={{textAlign: 'center'}}>
+
+![](/img/slack-conversation-status-report-response.png)
+
+</div>
+
+## Задачи {#tasks}
+
+Dispatch предоставляет лёгкий мост между комментариями Google Docs, назначенными как задачи, и каналом инцидента в Slack.
+
+В документе инцидента это выглядит так:
+
+<div style={{textAlign: 'center'}}>
+
+![](/img/google-docs-task-comment.png)
+
+</div>
+
+Следующие команды помогают управлять задачами, связанными с инцидентом.
+
+### /dispatch-list-my-tasks {#dispatch-list-my-tasks}
+
+Любой, кто выполнит команду `/dispatch-list-my-tasks`, увидит список задач, которые он создал или которые назначены ему.
+
+<div style={{textAlign: 'center'}}>
+
+![](/img/slack-conversation-list-my-tasks.png)
+
+</div>
+
+### /dispatch-list-tasks {#dispatch-list-tasks}
+
+Используйте `/dispatch-list-tasks`, чтобы вывести временное сообщение со списком всех задач, связанных с инцидентом.
+
+<div style={{textAlign: 'center'}}>
+
+![](/img/slack-conversation-list-tasks.png)
+
+</div>
+
+## Ресурсы и метаданные инцидента {#incident-resources-and-metadata}
+
+Эти команды помогают управлять ресурсами и метаданными инцидента (данными об инциденте).
+
+### /dispatch-update-incident {#dispatch-update-incident}
+
+Эта команда позволяет командиру инцидента изменить ряд параметров инцидента, не покидая интерфейс обсуждения.
+
+<div style={{textAlign: 'center'}}>
+
+![](/img/slack-conversation-edit-incident.png)
+
+</div>
+
+### /dispatch-add-timeline-event {#dispatch-add-timeline-event}
+
+Эта команда помогает добавить событие в хронологию инцидента. Можно указать местное время (берётся из вашего профиля Slack) или всемирное координированное время (UTC).
+
+<div style={{textAlign: 'center'}}>
+
+![](/img/slack-conversation-add-timeline-event.png)
+
+</div>
+
+### /dispatch-list-workflows {#dispatch-list-workflows}
+
+Эта команда выводит список всех рабочих процессов, связанных с текущим инцидентом.
+
+<div style={{textAlign: 'center'}}>
+
+![](/img/slack-conversation-list-workflows.png)
+
+</div>
+
+### /dispatch-run-workflow {#dispatch-run-workflow}
+
+Эта команда запускает заранее настроенный рабочий процесс и связывает его артефакты с текущим инцидентом.
+
+<div style={{textAlign: 'center'}}>
+
+![](/img/slack-conversation-run-workflow.png)
+
+</div>
+
+### /dispatch-create-task {#dispatch-create-task}
+
+Эта команда создаёт задачу для текущего инцидента.
+<div style={{textAlign: 'center'}}>
+
+{/* TODO(averyl): replace this image */}
+![](/img/slack-conversation-create-task.png)
+
+</div>
+
+### /dispatch-create-case {#dispatch-create-case}
+
+Эта команда создаёт кейс для текущего инцидента.
+
+<div style={{textAlign: 'center'}}>
+
+</div>
+
+{/* The sections below have no screenshot yet; capturing one needs a live Slack workspace. See issue #135. */}
+
+### /dispatch-update-case {#dispatch-update-case}
+
+Выполните `/dispatch-update-case` в канале кейса, чтобы открыть модальное окно с его названием, описанием, решением и причиной решения, исполнителем, статусом, типом, приоритетом и видимостью.
+
+Эскалировать кейс отсюда нельзя: в списке статусов намеренно нет `Escalated`. Используйте вместо этого [`/dispatch-escalate-case`](#dispatch-escalate-case) — эта команда создаёт инцидент, в который превращается кейс.
+
+### /dispatch-escalate-case {#dispatch-escalate-case}
+
+Выполните `/dispatch-escalate-case` в канале кейса, чтобы превратить его в инцидент. Модальное окно открывается уже заполненным данными кейса — названием, описанием и проектом, — так что можно принять значения по умолчанию или поправить их, а затем выбрать тип, приоритет и серьёзность инцидента.
+
+Если кейс уже эскалирован, Dispatch сообщит об этом и ничего не сделает: кейс эскалируется только один раз.
+
+### /dispatch-engage-user {#dispatch-engage-user}
+
+Выполните `/dispatch-engage-user` в канале кейса, чтобы попросить человека подтвердить свою личность через вашего провайдера многофакторной аутентификации. Типичный случай — сообщение о том, что некая учётная запись сделала что-то, чего её владелец мог и не делать.
+
+Выберите человека и отредактируйте сообщение, которое он увидит, или оставьте текст по умолчанию. Dispatch добавит его в кейс, если он ещё не участвует, затем отправит запрос и сообщит о результате в канале. Если у человека нет учётной записи в вашем рабочем пространстве Slack, Dispatch напишет об этом в канале.
+
+### /dispatch-list-incidents {#dispatch-list-incidents}
+
+Используйте `/dispatch-list-incidents`, чтобы открыть модальное окно со списком всех инцидентов, которые сейчас активны или стабильны, а также инцидентов, закрытых за последние 24 часа. Каждая запись ведёт на инцидент в Dispatch и показывает его командира, проект, статус, тип, серьёзность и приоритет.
+
+Запущенная в канале инцидента, команда показывает инциденты проекта этого инцидента. Запущенная в любом другом месте — инциденты всех проектов или только одного, если указать его имя: `/dispatch-list-incidents Corporate Security`, где имя — название проекта ровно в том виде, как оно записано в Dispatch. Показать можно только проекты той организации, из которой выполняется команда; аргумента для указания другой организации нет.
+
+Инциденты с ограниченной видимостью в список не попадают никогда, а окно показывает не больше 49 инцидентов; если в вашей установке их больше, используйте веб-интерфейс Dispatch.
+
+### /dispatch-list-signals {#dispatch-list-signals}
+
+Используйте `/dispatch-list-signals`, чтобы узнать, какие определения сигналов отправляют свои кейсы в канал обсуждения, из которого вы выполняете команду. Откроется модальное окно со списком всех определений, чей тип кейса нацелен на этот канал обсуждения; для каждого показаны имя и вариант, а рядом — кнопка [Отсрочить](../../administration/settings/signal/filter.mdx#snooze-filter) (Snooze), которая временно останавливает создание кейсов по этому определению. Длинные списки разбиваются на страницы по 25 записей.
+
+Команда не принимает аргументов. Если ни один тип кейса не нацелен на этот канал обсуждения, окно сообщит об этом.
+
+### /dispatch-summary {#dispatch-summary}
+
+Используйте `/dispatch-summary` в канале инцидента или кейса, чтобы получить сгенерированную ИИ вводную сводку о том, что произошло к этому моменту. Особенно полезно, если вас подключили поздно или вы принимаете инцидент на полпути. Сводку видите только вы, и Dispatch помечает её как сгенерированную ИИ — проверьте её, прежде чем действовать.
+
+Dispatch откажет и объяснит причину, если вводные сводки не включены для типа инцидента или кейса, если у инцидента или кейса ограниченная видимость или если у кейса нет собственного канала. Если в проекте не включён плагин искусственного интеллекта, Dispatch сообщит только, что сводка недоступна — попросите администратора проверить плагины проекта.

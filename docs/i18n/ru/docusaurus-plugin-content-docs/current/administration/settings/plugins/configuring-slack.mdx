@@ -1,0 +1,236 @@
+---
+description: Параметры настройки плагина Slack.
+---
+
+# Настройка Slack
+
+Dispatch из коробки поддерживает Slack. Ниже описано, как настроить плагин Slack для работы с `Dispatch`.
+
+## Events Mode или Socket Mode {#events-mode-vs-socket-mode}
+
+Dispatch поддерживает и [Events Mode](https://api.slack.com/events-api) (режим событий), и [Socket Mode](https://api.slack.com/apis/connections/socket) (режим сокетов).
+
+Какой режим выбрать?
+
+- Если Dispatch будет слушать публичный статический HTTP-адрес, рекомендуем **Events Mode**.
+- Если Dispatch разворачивается за корпоративным файрволом или у вас есть опасения по безопасности, рекомендуем **Socket Mode**.
+
+Подробнее о переменных — в разделе [Конфигурация Dispatch](#dispatch-configuration) ниже.
+
+### Events Mode {#events-mode}
+
+Для Events Mode нужны конкретные URL-адреса, доступные **публично**:
+
+- `Dispatch` принимает общие события на конечной точке `/api/v1/<organization>/events/slack/event` (например, участник вошёл в канал, реакции).
+- `Dispatch` принимает события команд на конечной точке `/api/v1/<organization>/events/slack/command` (команды `/dispatch-*`).
+- `Dispatch` принимает события действий на конечной точке `/api/v1/<organization>/events/slack/action` (диалоги и модальные окна).
+
+### Socket Mode {#socket-mode}
+
+Чтобы включить Socket Mode, добавьте токен приложения для Socket Mode в поле `Socket Mode App Token` плагинов `Slack Plugin - Conversation Management` и `Slack Plugin - Contact Information Resolver` в веб-интерфейсе Dispatch: «Настройки» -> «Проект» -> «Плагины».
+
+Socket Mode не требует настройки конечных точек: в этом режиме их значения игнорируются.
+
+Для Socket Mode нужен отдельный процесс (помимо основного веб-сервера Dispatch), который будет принимать события по WebSocket.
+
+Проще всего запустить его такой командой CLI:
+
+```
+dispatch server slack <organization> <project>
+```
+
+Этот процесс нужно запускать как демон, так же как и веб-сервер Dispatch.
+
+## Конфигурация Slack {#slack-configuration}
+
+Для вашего приложения Slack в [веб-интерфейсе Slack API](https://api.slack.com/apps) нужно задать следующие параметры — и для `events mode`, и для `socket mode`.
+
+### Event Subscriptions (подписки на события) {#event-subscriptions}
+
+Чтобы Dispatch мог обрабатывать события Slack, в разделе `Events Subscriptions` убедитесь, что `Request URL` указывает на конечную точку подписки на события сервера Dispatch: `/api/v1/<organization>/events/slack/event`. Замените `<organization>` на имя вашей организации. По умолчанию это `default`.
+
+Затем в разделе `Subscribe to bot events` добавьте следующие события бота:
+
+| Событие               | Описание                                           |
+| --------------------- | -------------------------------------------------- |
+| member_joined_channel | Пользователь вошёл в публичный или приватный канал |
+| member_left_channel   | Пользователь покинул публичный или приватный канал |
+| message.groups        | В приватный канал отправлено сообщение             |
+
+### Interactivity (интерактивность) {#interactivity}
+
+Чтобы Dispatch мог создавать интерактивные элементы — диалоги и модальные окна, — убедитесь, что `Request URL` указывает на конечную точку действий сервера Dispatch: `/api/v1/<organization>/events/slack/action`. Замените `<organization>` на имя вашей организации. По умолчанию это `default`.
+
+### Select Menus (меню выбора) {#select-menus}
+
+На той же странице `Interactivity & Shortcuts`, в разделе `Select Menus`, задайте `Options Load URL` равным `/api/v1/<organization>/events/slack/menu`. Замените `<organization>` на имя вашей организации. По умолчанию это `default`.
+
+Это отдельное поле, не связанное с `Request URL` выше, и значение оттуда оно не наследует. Dispatch использует его для меню с подсказками, которые подгружают варианты по запросу, а не встраивают их в модальное окно: выбор тегов и выбор проекта в установках, где включено больше 100 проектов. Если поле не задано, такие меню открываются пустыми и остаются пустыми, а поскольку поле обязательное, форму нельзя отправить.
+
+### Slash Commands (слеш-команды) {#slash-commands}
+
+Чтобы слеш-команды Dispatch заработали, сначала добавьте их в приложение Slack. Убедитесь, что поле `Command` в веб-интерфейсе Slack API совпадает с именем команды в плагине Slack в веб-интерфейсе Dispatch, а `Request URL` указывает на конечную точку команд сервера Dispatch: `/api/v1/<organization>/events/slack/command`.
+
+<div style={{textAlign: 'center'}}>
+
+![](/img/slack-setup-commands-0.png)
+
+</div>
+
+<div style={{textAlign: 'center'}}>
+
+![](/img/slack-setup-commands-1.png)
+
+</div>
+
+<div style={{textAlign: 'center'}}>
+
+![](/img/slack-setup-commands-2.png)
+
+</div>
+
+### OAuth & Permissions (OAuth и разрешения) {#oauth--permissions}
+
+`Bot User OAuth Access Token` используется для запросов к Slack API.
+
+#### Скоупы {#scopes}
+
+Ниже перечислены скоупы бота и пользователя, которые нужны приложению Dispatch для Slack, чтобы работать корректно.
+
+**Bot Token Scopes**
+
+```text
+bookmarks:write
+channels:read
+chat:write
+commands
+files:read
+groups:history
+groups:read
+groups:write
+im:history
+im:read
+im:write
+mpim:history
+mpim:read
+mpim:write
+pins:write
+reactions:read
+reactions:write
+team:read
+users:read
+users:read.email
+users.profile:read
+users:write
+```
+
+**User Token Scopes**
+
+```text
+channels:read
+groups:history
+groups:read
+```
+
+## Конфигурация Dispatch {#dispatch-configuration}
+
+Плагины Slack для Dispatch — управление каналами обсуждения и поиск контактной информации — настраиваются в веб-интерфейсе Dispatch: «Настройки» -> «Проект» -> «Плагины». Добавьте нужные плагины кнопкой `NEW` и затем отредактируйте их конфигурацию, нажав на три вертикальные точки.
+
+### Плагин каналов обсуждения (Conversation Management) {#conversation-management-plugin}
+
+#### Токен бота (API Bot Token) {#api-bot-token}
+
+> Токен бота приложения Slack, нужный для обращения к Slack API. В Slack он называется «Bot User OAuth Access Token» и показывается соавторам приложения при его установке.
+
+#### Токен приложения для Socket Mode (Socket Mode App Token) {#socket-mode-app-token}
+
+> Токен приложения Slack для Socket Mode; выдаётся при включении Socket Mode и служит для аутентификации в WebSocket API. Если Socket Mode не используется, значение игнорируется.
+
+#### Секрет подписи (Signing Secret) {#signing-secret}
+
+> Секрет для проверки подписей, которыми Slack снабжает каждый HTTP-запрос. В Slack он называется «Signing Secret».
+
+#### Идентификатор пользователя приложения (App User Id) {#app-user-id}
+
+> Идентификатор бот-пользователя приложения Slack: по нему Dispatch отфильтровывает события, порождённые самим приложением \(например, сообщение, опубликованное в канале\). Получить идентификатор бот-пользователя \(`UXXXXXXXX`\) можно через конечную точку [auth.test](https://api.slack.com/methods/auth.test/test), передав токен бота приложения \(`xoxb-*`\)."
+
+#### Приватные каналы (Private Channels) {#private-channels}
+
+> Создавать ли для инцидентов приватные каналы Slack вместо публичных.
+
+#### Запрет тредов (Ban Threads) {#ban-threads}
+
+> Разрешать или запрещать треды (ответы в ветках) в каналах инцидентов.
+
+#### Реакция для события хронологии (Timeline Event Reaction) {#timeline-event-reaction}
+
+> Реакция, по которой сообщение из канала инцидента добавляется в хронологию инцидента.
+
+#### Строки команд (Command Strings) {#command-strings}
+
+> Имена слеш-команд, которые будет предоставлять ваше приложение Slack.
+
+<div style={{textAlign: 'center'}}>
+
+![](/img/slack-plugin-conversation-management.png)
+
+</div>
+
+При желании их значения можно переопределить. Ниже приведены описания команд — их удобно скопировать в настройки слеш-команд вашего приложения Slack.
+
+| Команда                                                                             | Описание                                                                                                                    |
+| ----------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| `/dispatch-add-timeline-event`                                                      | Открывает модальное окно для добавления события в хронологию инцидента.                                                     |
+| `/dispatch-assign-role`                                                             | Открывает модальное окно для назначения роли участнику.                                                                     |
+| `/dispatch-engage-oncall`                                                           | Открывает модальное окно для вовлечения дежурного.                                                                          |
+| `/dispatch-list-incidents [project name]`                                           | Показывает активные и стабильные инциденты, а также закрытые за последние 24 часа — по одному проекту или по всем сразу.    |
+| `/dispatch-list-my-tasks`                                                           | Открывает модальное окно со списком ваших открытых и решённых задач по инциденту.                                           |
+| `/dispatch-list-participants`                                                       | Открывает модальное окно со списком участников инцидента.                                                                   |
+| `/dispatch-list-signals`                                                            | Открывает модальное окно со списком определений сигналов, настроенных для канала обсуждения, из которого запущена команда.  |
+| `/dispatch-list-tasks`                                                              | Открывает модальное окно со списком открытых и решённых задач инцидента.                                                    |
+| `/dispatch-list-workflows`                                                          | Показывает рабочие процессы, запускавшиеся в ходе этого инцидента.                                                          |
+| `/dispatch-report-executive`                                                        | Открывает модальное окно для составления отчёта для руководства.                                                            |
+| `/dispatch-report-incident`                                                         | Открывает модальное окно для сообщения об инциденте. Команду можно запускать из каналов, не связанных с инцидентом, если в них состоит бот Dispatch. |
+| `/dispatch-report-tactical`                                                         | Открывает модальное окно для составления тактического отчёта.                                                               |
+| `/dispatch-run-workflow`                                                            | Запускает рабочий процесс и привязывает его артефакты к этому инциденту.                                                    |
+| `/dispatch-update-incident`                                                         | Открывает модальное окно для обновления инцидента.                                                                          |
+| `/dispatch-notifications-group`                                                     | Открывает модальное окно для редактирования группы уведомлений.                                                             |
+| `/dispatch-update-participant`                                                      | Открывает модальное окно для обновления данных участника.                                                                   |
+| `/dispatch-create-task`                                                             | Открывает модальное окно для создания задачи по инциденту.                                                                  |
+| `/dispatch-create-case`                                                             | Открывает модальное окно для создания кейса.                                                                                |
+| `/dispatch-update-case`                                                             | Открывает модальное окно для обновления кейса. Запускается из канала кейса.                                                 |
+| `/dispatch-escalate-case`                                                           | Открывает модальное окно для эскалации кейса в инцидент. Запускается из канала кейса.                                       |
+| `/dispatch-engage-user`                                                             | Открывает модальное окно, чтобы попросить участника кейса подтвердить личность через MFA. Запускается из канала кейса.      |
+| `/dispatch-summary`                                                                 | Если это разрешено для данного типа кейса/инцидента, создаёт вводную сводку, сгенерированную ИИ.                            |
+
+### Плагин контактов (Contact Information Resolver) {#contact-information-resolver-plugin}
+
+#### Токен бота (API Bot Token) {#api-bot-token-1}
+
+> Токен бота приложения Slack, нужный для обращения к Slack API. В Slack он называется «Bot User OAuth Access Token» и показывается соавторам приложения при его установке.
+
+#### Токен приложения для Socket Mode (Socket Mode App Token) {#socket-mode-app-token-1}
+
+> Токен приложения Slack для Socket Mode; выдаётся при включении Socket Mode и служит для аутентификации в WebSocket API. Если Socket Mode не используется, значение игнорируется.
+
+#### Секрет подписи (Signing Secret) {#signing-secret-1}
+
+> Секрет для проверки подписей, которыми Slack снабжает каждый HTTP-запрос. В Slack он называется «Signing Secret».
+
+#### Идентификатор поля профиля «Отдел» (Profile Department Field Id) {#profile-department-field-id}
+
+> Идентификатор поля профиля, в котором хранится отдел (Department).
+
+#### Идентификатор поля профиля «Команда» (Profile Team Field Id) {#profile-team-field-id}
+
+> Идентификатор поля профиля, в котором хранится команда (Team).
+
+#### Идентификатор поля профиля «Веб-ссылка» (Profile Weblink Field Id) {#profile-weblink-field-id}
+
+> Идентификатор поля профиля, в котором хранится веб-ссылка.
+
+<div style={{textAlign: 'center'}}>
+
+![](/img/slack-plugin-contact-information-resolver.png)
+
+</div>

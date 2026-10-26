@@ -24,7 +24,7 @@ no allow list. The tenant boundary *is* the authorization boundary, which is why
 See [Who can sign in](#who-can-sign-in).
 :::
 
-## Create the app registration
+## Create the app registration {#create-the-app-registration}
 
 In the [Microsoft Entra admin center](https://entra.microsoft.com), go to
 **Identity → Applications → App registrations → New registration**.
@@ -38,7 +38,7 @@ In the [Microsoft Entra admin center](https://entra.microsoft.com), go to
 Record the **Application (client) ID** and the **Directory (tenant) ID** from the
 registration's Overview page.
 
-### Supported account types
+### Supported account types {#supported-account-types}
 
 Choose **single tenant**. Dispatch has no per-user approval step, so a multitenant
 registration means any Microsoft work, school, or personal account in the world
@@ -46,7 +46,7 @@ can sign in and be provisioned. Only pick multitenant if you genuinely intend to
 admit guests from other directories, and pair it with a separate authorization
 control — the issuer setting below can only pin one tenant.
 
-### Redirect URI
+### Redirect URI {#redirect-uri}
 
 The redirect URI must be registered under the **Single-page application**
 platform, not **Web**. That is what makes Entra:
@@ -64,7 +64,7 @@ this one URI needs registering however many routes the app has. Add
 `http://localhost:8080/implicit/callback` as a second URI if you want the local
 dev server to sign in against the same registration.
 
-### Client secret
+### Client secret {#client-secret}
 
 **Do not create one.** A single-page application is a public client; Microsoft
 documents that SPAs must not use secrets or certificates when redeeming an
@@ -72,7 +72,7 @@ authorization code, and Entra refuses client credentials on any request carrying
 an `Origin` header. Dispatch never sends one and has nowhere to put one that the
 browser could not read. PKCE, not a secret, is what binds the code to this client.
 
-### Scopes and permissions
+### Scopes and permissions {#scopes-and-permissions}
 
 `openid`, `profile` and `email` — the three OpenID Connect scopes the frontend
 already requests. Nothing else. These are delegated permissions that need no
@@ -82,7 +82,7 @@ the user's identity out of the ID token and never calls Graph.
 Leave **API permissions** at the `User.Read` default Entra adds, or remove it.
 Dispatch does not use it.
 
-### Token claims
+### Token claims {#token-claims}
 
 Dispatch needs exactly one claim: an email address to key the user on. By default
 it reads `email`, but Entra emits `email` for a managed user only if you add it as
@@ -101,7 +101,7 @@ addresses — Dispatch also uses this value to match people to incidents and to
 address notifications — add `email` under **Token configuration → Add optional
 claim → ID → email** and leave `DISPATCH_JWT_EMAIL_OVERRIDE` unset instead.
 
-## Configure Dispatch
+## Configure Dispatch {#configure-dispatch}
 
 With `<tenant-id>` and `<client-id>` from the registration:
 
@@ -136,7 +136,7 @@ Notes on the less obvious ones:
 * Settings prefixed `VITE_` are read when the frontend bundle is **built**, not
   when the server starts — see [Frontend build](#frontend-build).
 
-### Restricting sign-in to your tenant
+### Restricting sign-in to your tenant {#restricting-sign-in-to-your-tenant}
 
 Two things do this, and both matter:
 
@@ -155,7 +155,7 @@ with Dispatch's: set **Enterprise applications → Dispatch → Properties →
 Assignment required** to **Yes** and assign the groups that should have access.
 Dispatch has no equivalent.
 
-### Frontend build
+### Frontend build {#frontend-build}
 
 The three `VITE_`-prefixed values are compiled into the JavaScript bundle, so
 changing them means rebuilding the frontend, not restarting the server. When
@@ -174,7 +174,7 @@ The backend settings are ordinary environment variables and take effect on
 restart. None of them is a secret, so they are safe in a Compose file or an image
 build log — there is no client secret anywhere in this configuration.
 
-## Who can sign in
+## Who can sign in {#who-can-sign-in}
 
 Dispatch provisions on first sight. The first request carrying an ID token it
 accepts creates a `DispatchUser` with the `Member` role in the organization being
@@ -189,7 +189,7 @@ Consequently:
   **Settings → Users**, or with
   `dispatch user update --role owner --organization <org> <email>`.
 
-### Existing Dispatch users
+### Existing Dispatch users {#existing-dispatch-users}
 
 Users are keyed by email address, and that does not change when you enable Entra.
 An account that already exists — created by basic auth self-registration, by an
@@ -212,14 +212,14 @@ resolved back to an address anyway. The tenant restriction, not the claim's
 immutability, is what makes the address trustworthy.
 :::
 
-## Verifying it works
+## Verifying it works {#verifying-it-works}
 
 1. Restart the server (and rebuild the frontend) with the settings above.
 2. Open Dispatch. You should be redirected to `login.microsoftonline.com` and back.
 3. Check the server log at startup. The PKCE provider warns about anything it
    needs and does not have — a missing JWKS URL, issuer, or audience.
 
-### Troubleshooting
+### Troubleshooting {#troubleshooting}
 
 | Symptom | Cause |
 | --- | --- |
@@ -231,7 +231,7 @@ immutability, is what makes the address trustworthy.
 | 401 with *Token carries no 'email' claim* | Set `DISPATCH_JWT_EMAIL_OVERRIDE=preferred_username`, or add the `email` optional claim. |
 | `AADSTS50011`, redirect URI mismatch | The registered URI must be the deployment origin plus `/implicit/callback`, exactly. |
 
-## Reverting to another provider
+## Reverting to another provider {#reverting-to-another-provider}
 
 There is nothing to undo in the database — Entra sign-in creates ordinary
 Dispatch users. To go back to basic authentication, set

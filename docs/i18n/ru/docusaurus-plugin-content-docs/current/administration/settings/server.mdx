@@ -1,0 +1,242 @@
+---
+description: >-
+  Описывает дополнительные параметры конфигурации самого сервера Dispatch.
+  Дополнительные параметры конкретных плагинов ищите в документации
+  плагина.
+---
+
+# Сервер
+
+## Первая установка {#first-install}
+
+Dispatch использует ту же систему конфигурации, что и [Starlette](https://www.starlette.io/config/).
+
+По умолчанию конфигурация читается из переменных окружения или файлов `.env`.
+
+:::info
+Все параметры с префиксом `VITE_` — переменные окружения для фронтенда на Vue. Они используются только при сборке JavaScript-бандла. Подробности см. [здесь](https://vitejs.dev/guide/env-and-mode.html). На время сборки эти переменные нужно поместить в `src/dispatch/static/dispatch/.env`.
+:::
+
+:::info
+Как правило, при указании значений конфигурации не используйте кавычки.
+:::
+
+### Общие {#general}
+
+#### `LOG_LEVEL` \[по умолчанию: 'WARNING'\] {#log_level-default-warning}
+
+> Задаёт уровень логирования приложения во время работы. Возможные значения: CRITICAL, ERROR, WARNING, INFO, DEBUG
+
+#### `STATIC_DIR` \[по умолчанию: 'src/dispatch/static/dispatch/dist'\] {#static_dir-default-srcdispatchstaticdispatchdist}
+
+> Задаёт, откуда на локальном диске раздаётся статика веб-интерфейса Dispatch. Переменную можно явно установить в `''`, если вы хотите раздавать статику вне сервера Dispatch.
+
+#### `METRIC_PROVIDERS` \[по умолчанию: ""\] {#metric_providers-default-}
+
+> Список провайдеров метрик через запятую, куда Dispatch будет отправлять ключевые системные метрики.
+
+#### `SECRET_PROVIDER` \[по умолчанию: None\] {#secret_provider-default-none}
+
+> Определяет провайдера для расшифровки секретов конфигурации. Доступные варианты: `kms-secret` и `metatron-secret`
+
+#### `ENV_TAGS` \[по умолчанию: ""\] {#env_tags-default-}
+
+> Список тегов через запятую, которые Dispatch попытается взять из окружения. Например, строка `foo:bar,baz:blah` создаст два тега: `foo` со значением переменной окружения `bar` и `baz` со значением переменной окружения `blah`.
+
+#### `SENTRY_DSN` \[по умолчанию: none\] {#sentry_dsn-default-none}
+
+> Необязательная настройка для отправки ошибок Dispatch в Sentry.
+
+#### `MJML_PATH` \[по умолчанию: 'static/dispatch/node_modules/.bin' (относительно каталога пакета)\] {#mjml_path-default-staticdispatchnode_modulesbin-relative-to-the-package-directory}
+
+> Dispatch использует [MJML](https://mjml.io/documentation/) для генерации HTML-писем. Этому пакету также нужен бинарник `node`, доступный в стандартном пути (или заданный в пути Dispatch). С помощью этой переменной укажите, где Dispatch должен искать команду `mjml`. **Если вы используете стандартный docker-образ Dispatch, это поле нужно вручную установить в путь по умолчанию.**
+
+#### `DISPATCH_UI_URL` {#dispatch_ui_url}
+
+> URL административного интерфейса Dispatch; используется в сообщениях для ссылок на него.
+
+### Аутентификация {#authentication}
+
+#### `DISPATCH_AUTHENTICATION_PROVIDER_SLUG` \[по умолчанию: dispatch-auth-provider-basic\] {#dispatch_authentication_provider_slug-default-dispatch-auth-provider-basic}
+
+> Определяет, какой провайдер аутентификации использует Dispatch; по умолчанию Dispatch поставляется с базовым провайдером аутентификации. Также доступен провайдер аутентификации PKCE (`dispatch-auth-provider-pkce`).
+
+:::info
+Если вы хотите отключить аутентификацию, задайте `DISPATCH_AUTHENTICATION_PROVIDER_SLUG=`
+:::
+
+#### Конфигурация `dispatch-auth-provider-basic` {#configuration-for-dispatch-auth-provider-basic}
+
+:::warning
+Сейчас базовая аутентификация позволяет регистрироваться самостоятельно, без подтверждения.
+:::
+
+:::info
+Чтобы этот плагин работал, нужно задать `DISPATCH_JWT_SECRET`.
+:::
+
+#### `DISPATCH_JWT_SECRET` {#dispatch_jwt_secret}
+
+> Используется базовым провайдером аутентификации для выпуска JWT-токенов.
+
+#### `DISPATCH_JWT_ALG` \[по умолчанию: 'HS256'\] {#dispatch_jwt_alg-default-hs256}
+
+> Используется базовым провайдером аутентификации для выпуска JWT-токенов.
+
+#### `DISPATCH_JWT_EXP` \[по умолчанию: 86400 \] {#dispatch_jwt_exp-default-86400-}
+
+> Используется базовым провайдером аутентификации для выпуска JWT-токенов и задаёт срок их действия.
+
+#### `DISPATCH_JWT_AUDIENCE` {#dispatch_jwt_audience}
+
+> Значение `aud`, которое провайдер PKCE требует в id-токене, — обычно это
+> client id OIDC. Токены, выпущенные для другого приложения, отклоняются. Если ваш
+> провайдер выставляет `aud`, а этот параметр не задан, отклоняется каждый токен.
+
+#### `DISPATCH_JWT_EMAIL_OVERRIDE` {#dispatch_jwt_email_override}
+
+> Переопределяет, где Dispatch ищет email пользователя в id-токене. По умолчанию —
+> claim `email`. Токен без значения в настроенном claim отклоняется.
+
+#### `DISPATCH_AUTHENTICATION_DEFAULT_USER` \[по умолчанию: dispatch@example.com\] {#dispatch_authentication_default_user-default-dispatchexamplecom}
+
+> Используется как анонимный пользователь по умолчанию, когда аутентификация отключена.
+
+#### Конфигурация `dispatch-auth-provider-pkce` {#configuration-for-dispatch-auth-provider-pkce}
+
+Это универсальный провайдер OpenID Connect в Dispatch. Он аутентифицирует браузер
+по authorization code flow с PKCE и проверяет полученный токен при каждом запросе
+к API. Он работает с любым провайдером OIDC, соответствующим спецификации, — Okta, Google,
+Keycloak, Microsoft Entra ID. Разобранный пример для Entra см. в разделе
+[Аутентификация через Microsoft Entra ID](authentication-entra-id).
+
+:::info
+Чтобы этот плагин работал с вашей настройкой OIDC, нужно задать
+`DISPATCH_AUTHENTICATION_PROVIDER_PKCE_JWKS`,
+`DISPATCH_AUTHENTICATION_PROVIDER_PKCE_ISSUER` и `DISPATCH_JWT_AUDIENCE`. Кроме того,
+могут понадобиться `DISPATCH_JWT_EMAIL_OVERRIDE` и
+`DISPATCH_PKCE_DONT_VERIFY_AT_HASH` — в зависимости от того, что выдаёт ваш провайдер.
+:::
+
+#### `DISPATCH_AUTHENTICATION_PROVIDER_PKCE_JWKS` {#dispatch_authentication_provider_pkce_jwks}
+
+> Используется бэкендом аутентификации Dispatch, чтобы получить открытый ключ JSON Web Key Set \(JWKS\) от указанного провайдера.
+> Скорее всего, это URL `jwks_uri` вашего провайдера OIDC.
+> Обязателен при использовании провайдера аутентификации `dispatch-auth-provider-pkce`.
+
+#### `DISPATCH_AUTHENTICATION_PROVIDER_PKCE_ISSUER` {#dispatch_authentication_provider_pkce_issuer}
+
+> Точное значение `iss`, которое выпускает ваш провайдер, например
+> `https://login.microsoftonline.com/<tenant-id>/v2.0`. Токены с любым другим
+> издателем отклоняются.
+
+:::warning
+Если оставить параметр пустым, будет принят любой издатель, чью подпись подтверждает
+настроенный JWKS. Некоторые провайдеры — в том числе Microsoft Entra ID — подписывают
+токены всех тенантов общим набором ключей, поэтому без ожидаемого издателя корректная
+подпись не говорит, из какого каталога пришёл пользователь. Если выбран провайдер PKCE,
+а этот параметр не задан, Dispatch пишет предупреждение в лог при запуске. Значения
+по умолчанию у него нет, чтобы существующие деплои продолжали работать, но в новом деплое
+его нужно задавать всегда.
+:::
+
+#### `DISPATCH_AUTHENTICATION_PROVIDER_PKCE_JWKS_CACHE_SECONDS` \[по умолчанию: 300\] {#dispatch_authentication_provider_pkce_jwks_cache_seconds-default-300}
+
+> Как долго кешируются ключи подписи провайдера. Ключи также перезапрашиваются
+> сразу, когда приходит токен с key id, которого Dispatch ещё не видел, поэтому
+> ротация ключа подписи подхватывается, не дожидаясь истечения этого срока.
+
+#### `DISPATCH_AUTHENTICATION_PROVIDER_PKCE_JWKS_TIMEOUT_SECONDS` \[по умолчанию: 5\] {#dispatch_authentication_provider_pkce_jwks_timeout_seconds-default-5}
+
+> Тайм-аут запроса при загрузке JWKS. Если загрузка не удалась, а ключи уже
+> закешированы, продолжают использоваться закешированные ключи — вместо того чтобы отклонять
+> каждый запрос, пока провайдер недоступен.
+
+#### `DISPATCH_AUTHENTICATION_PROVIDER_PKCE_LEEWAY_SECONDS` \[по умолчанию: 60\] {#dispatch_authentication_provider_pkce_leeway_seconds-default-60}
+
+> Допустимое расхождение часов при проверке `exp`, `nbf` и `iat`. Установите `0`, чтобы требовать
+> точного совпадения с часами провайдера идентификации.
+
+#### `DISPATCH_PKCE_DONT_VERIFY_AT_HASH` \[по умолчанию: false\] {#dispatch_pkce_dont_verify_at_hash-default-false}
+
+> В зависимости от того, какие значения отправляет ваш провайдер OIDC, может понадобиться установить `true`, чтобы бэкенд Dispatch
+> смог декодировать JWT-токен. Принимает только `true`/`false` (или `1`/`0`);
+> любое другое значение отклоняется при запуске.
+
+:::info
+Microsoft Entra ID выдаёт `at_hash` только с конечной точки `/authorize` и никогда — при
+обмене кода на токен, который использует этот поток, поэтому деплою с Entra этот параметр
+не нужен.
+:::
+
+#### `DISPATCH_AUTHENTICATION_PROVIDER_PKCE_OPEN_ID_CONNECT_URL` {#dispatch_authentication_provider_pkce_open_id_connect_url}
+
+> URL well-known-конфигурации вашего провайдера OIDC без завершающего слеша. Используется веб-интерфейсом
+> Dispatch для аутентификации пользователя через Proof Key Code Exchange \(PKCE\).
+
+#### `DISPATCH_AUTHENTICATION_PROVIDER_PKCE_CLIENT_ID` {#dispatch_authentication_provider_pkce_client_id}
+
+> Client id, который отправляется на конечную точку OpenID Connect.
+
+#### `DISPATCH_AUTHENTICATION_PROVIDER_USE_ID_TOKEN` \[по умолчанию: false\] {#dispatch_authentication_provider_use_id_token-default-false}
+
+> Использовать `id_token` вместо `access_token`, принятого по умолчанию. [Подробности](https://developer.okta.com/docs/reference/api/oidc/#tokens-and-claims)
+> Зависит от провайдера идентификации.
+
+#### Конфигурация `dispatch-auth-provider-header` {#configuration-for-dispatch-auth-provider-header}
+
+> Аутентифицирует пользователей по заголовкам HTTP-запроса. Полезно, когда Dispatch стоит за обратным прокси, который сам выполняет аутентификацию.
+
+#### `DISPATCH_AUTHENTICATION_PROVIDER_HEADER_NAME` \[по умолчанию: remote-user\] {#dispatch_authentication_provider_header_name-default-remote-user}
+
+:::info
+Убедитесь, что обратный прокси вырезает этот заголовок из входящих (то есть присланных пользователем) запросов. Иначе аутентификацию можно будет обойти.
+:::
+
+> HTTP-заголовок запроса, из которого берётся имя пользователя; регистр не учитывается.
+
+#### Конфигурация `dispatch-auth-provider-aws-alb` {#configuration-for-dispatch-auth-provider-aws-alb}
+
+> Аутентифицирует пользователей через [аутентификацию AWS Application Load Balancer](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/listener-authenticate-users.html).
+
+#### `DISPATCH_AUTHENTICATION_PROVIDER_AWS_ALB_ARN` {#dispatch_authentication_provider_aws_alb_arn}
+
+> ARN вашего балансировщика; используется для проверки подписанта.
+> Формат: `arn:aws:elasticloadbalancing:region-code:account-id:loadbalancer/app/load-balancer-name/load-balancer-id`.
+> Обязателен при использовании провайдера аутентификации `dispatch-auth-provider-aws-alb`.
+
+#### `DISPATCH_AUTHENTICATION_PROVIDER_AWS_ALB_EMAIL_CLAIM` \[по умолчанию: email\] {#dispatch_authentication_provider_aws_alb_email_claim-default-email}
+
+> Переопределяет, где Dispatch ищет email пользователя в его claims.
+
+#### `DISPATCH_AUTHENTICATION_PROVIDER_AWS_ALB_PUBLIC_KEY_CACHE_SECONDS` \[по умолчанию: 300\] {#dispatch_authentication_provider_aws_alb_public_key_cache_seconds-default-300}
+
+> Переопределяет, как долго Dispatch кеширует открытый ключ, которым проверяется полезная нагрузка.
+
+:::info
+Добавьте действие слушателя ALB без аутентификации для `/api/v1/{organization}/events/*`, если хотите, чтобы плагины были публичными. Плагины сами определяют свою аутентификацию.
+:::
+
+### Хранение данных {#persistence}
+
+#### `DATABASE_HOSTNAME` {#database_hostname}
+
+> Dispatch работает с базой данных `Postgres`. Это имя хоста должно указывать на поддерживаемую версию `Postgres` — проект тестируется на `18` и разворачивается с ней; поддерживаемого пути обновления с кластера версии ниже `14` нет.
+
+#### `DATABASE_CREDENTIALS` \[секрет: True\] {#database_credentials-secret-true}
+
+> Учётные данные в формате `username:password` для аутентификации в базе данных `postgres`.
+
+#### `DATABASE_NAME` \[по умолчанию: 'dispatch'\] {#database_name-default-dispatch}
+
+> Позволяет задать имя базы данных для бэкенда `Dispatch`.
+
+#### `DATABASE_PORT` \[по умолчанию: '5432'\] {#database_port-default-5432}
+
+> Позволяет задать порт базы данных для бэкенда `Dispatch`.
+
+### Модели {#models}
+
+### Стоимость инцидента {#incident-cost}
+
+Dispatch [рассчитывает](https://github.com/helldweller/dispatch/blob/main/src/dispatch/incident/service.py#L279) стоимость инцидента, суммируя время, которое участники провели в каждой роли инцидента \(например, командир инцидента\), и применяя [множитель вовлечённости](https://github.com/helldweller/dispatch/blob/main/src/dispatch/incident/service.py#L266), зависящий от роли. Также учитывается время, потраченное на разбор инцидента. Dispatch рассчитывает и публикует стоимость всех инцидентов [каждые 5 минут](https://github.com/helldweller/dispatch/blob/main/src/dispatch/incident/scheduled.py#L257).

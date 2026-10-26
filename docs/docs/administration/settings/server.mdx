@@ -7,7 +7,7 @@ description: >-
 
 # Server
 
-## First Install
+## First Install {#first-install}
 
 Dispatch uses the same configuration system as [Starlette](https://www.starlette.io/config/).
 
@@ -21,43 +21,43 @@ All config items prefixed with `VITE_` are envvars for the Vue frontend. These v
 In general, do not include any quotation marks when adding configuration values.
 :::
 
-### General
+### General {#general}
 
-#### `LOG_LEVEL` \[default: 'WARNING'\]
+#### `LOG_LEVEL` \[default: 'WARNING'\] {#log_level-default-warning}
 
 > Controls the level of logging the application will perform during operations. Possible values: CRITICAL, ERROR, WARNING, INFO, DEBUG
 
-#### `STATIC_DIR` \[default: 'src/dispatch/static/dispatch/dist'\]
+#### `STATIC_DIR` \[default: 'src/dispatch/static/dispatch/dist'\] {#static_dir-default-srcdispatchstaticdispatchdist}
 
 > Controls where on the local disk, static content for the Dispatch Web UI should be served. This variable can also be explicitly set to `''` if you wish to serve static content outside of the Dispatch server.
 
-#### `METRIC_PROVIDERS` \[default: ""\]
+#### `METRIC_PROVIDERS` \[default: ""\] {#metric_providers-default-}
 
 > A comma-separated list of metric providers where Dispatch will send key system metrics.
 
-#### `SECRET_PROVIDER` \[default: None\]
+#### `SECRET_PROVIDER` \[default: None\] {#secret_provider-default-none}
 
 > Defines the provider to use for configuration secret decryption. Available options are: `kms-secret` and `metatron-secret`
 
-#### `ENV_TAGS` \[default: ""\]
+#### `ENV_TAGS` \[default: ""\] {#env_tags-default-}
 
 > A comma-separated list of tags that Dispatch will attempt to pull from the environment. For example, the string `foo:bar,baz:blah` will create two tags: `foo` with the environment value for `bar` and `baz` with the environment value for `blah`.
 
-#### `SENTRY_DSN` \[default: none\]
+#### `SENTRY_DSN` \[default: none\] {#sentry_dsn-default-none}
 
 > Optional configuration for using Sentry to report Dispatch errors.
 
-#### `MJML_PATH` \[default: 'static/dispatch/node_modules/.bin' (relative to the package directory)\]
+#### `MJML_PATH` \[default: 'static/dispatch/node_modules/.bin' (relative to the package directory)\] {#mjml_path-default-staticdispatchnode_modulesbin-relative-to-the-package-directory}
 
 > Dispatch uses [MJML](https://mjml.io/documentation/) to generate its HTML emails. This package also requires the `node` binary to be available on the standard path (or set in Dispatch's path). Use this variable to adjust the location where Dispatch should look for the `mjml` command. **If you are using the stock docker image of Dispatch you must manually set this field to the default path.**
 
-#### `DISPATCH_UI_URL`
+#### `DISPATCH_UI_URL` {#dispatch_ui_url}
 
 > URL of the Dispatch's Admin UI, used by messaging to refer to the Admin UI.
 
-### Authentication
+### Authentication {#authentication}
 
-#### `DISPATCH_AUTHENTICATION_PROVIDER_SLUG` \['default': dispatch-auth-provider-basic\]
+#### `DISPATCH_AUTHENTICATION_PROVIDER_SLUG` \['default': dispatch-auth-provider-basic\] {#dispatch_authentication_provider_slug-default-dispatch-auth-provider-basic}
 
 > Used by Dispatch to determine which authentication provider to use; by default, Dispatch ships with a basic authentication provider. A PKCE authentication provider (`dispatch-auth-provider-pkce`) is also available.
 
@@ -65,7 +65,7 @@ In general, do not include any quotation marks when adding configuration values.
 If you wish to disable authentication set `DISPATCH_AUTHENTICATION_PROVIDER_SLUG=`
 :::
 
-#### Configuration for `dispatch-auth-provider-basic`
+#### Configuration for `dispatch-auth-provider-basic` {#configuration-for-dispatch-auth-provider-basic}
 
 :::warning
 Today, basic authentication allows self-registration without approval.
@@ -75,34 +75,34 @@ Today, basic authentication allows self-registration without approval.
 For this plugin to work, you need to set `DISPATCH_JWT_SECRET`.
 :::
 
-#### `DISPATCH_JWT_SECRET`
+#### `DISPATCH_JWT_SECRET` {#dispatch_jwt_secret}
 
 > Used by the basic auth provider to mint JWT tokens.
 
-#### `DISPATCH_JWT_ALG` \['default': 'HS256'\]
+#### `DISPATCH_JWT_ALG` \['default': 'HS256'\] {#dispatch_jwt_alg-default-hs256}
 
 > Used by the basic auth provider to mint JWT tokens.
 
-#### `DISPATCH_JWT_EXP` \['default': 86400 \]
+#### `DISPATCH_JWT_EXP` \['default': 86400 \] {#dispatch_jwt_exp-default-86400-}
 
 > Used by the basic auth provider to mint JWT tokens and set their expiration.
 
-#### `DISPATCH_JWT_AUDIENCE`
+#### `DISPATCH_JWT_AUDIENCE` {#dispatch_jwt_audience}
 
 > The `aud` the PKCE provider requires an id token to carry — normally the OIDC
 > client id. Tokens issued for a different application are rejected. If your
 > provider sets `aud` and this is unset, every token is rejected.
 
-#### `DISPATCH_JWT_EMAIL_OVERRIDE`
+#### `DISPATCH_JWT_EMAIL_OVERRIDE` {#dispatch_jwt_email_override}
 
 > Override where Dispatch should find the user email in the idtoken. Defaults to
 > the `email` claim. A token with no value for the configured claim is rejected.
 
-#### `DISPATCH_AUTHENTICATION_DEFAULT_USER` \['default': dispatch@example.com\]
+#### `DISPATCH_AUTHENTICATION_DEFAULT_USER` \['default': dispatch@example.com\] {#dispatch_authentication_default_user-default-dispatchexamplecom}
 
 > Used as the default anonymous user when authentication is disabled.
 
-#### Configuration for `dispatch-auth-provider-pkce`
+#### Configuration for `dispatch-auth-provider-pkce` {#configuration-for-dispatch-auth-provider-pkce}
 
 This is Dispatch's generic OpenID Connect provider. It authenticates the browser
 with the authorization code flow plus PKCE, and validates the resulting token on
@@ -118,13 +118,13 @@ may additionally need `DISPATCH_JWT_EMAIL_OVERRIDE` and
 `DISPATCH_PKCE_DONT_VERIFY_AT_HASH`, depending on what your provider issues.
 :::
 
-#### `DISPATCH_AUTHENTICATION_PROVIDER_PKCE_JWKS`
+#### `DISPATCH_AUTHENTICATION_PROVIDER_PKCE_JWKS` {#dispatch_authentication_provider_pkce_jwks}
 
 > Used by Dispatch's authentication backend to pull the JSON Web Key Set \(JWKS\) public key from the specified provider.
 > This will likely be the `jwks_uri` URL from your OIDC provider.
 > This is required when using the `dispatch-auth-provider-pkce` auth provider.
 
-#### `DISPATCH_AUTHENTICATION_PROVIDER_PKCE_ISSUER`
+#### `DISPATCH_AUTHENTICATION_PROVIDER_PKCE_ISSUER` {#dispatch_authentication_provider_pkce_issuer}
 
 > The exact `iss` value your provider mints, for example
 > `https://login.microsoftonline.com/<tenant-id>/v2.0`. Tokens carrying any other
@@ -139,24 +139,24 @@ startup when the PKCE provider is selected and this is unset. It has no default 
 that existing deployments keep working, but a new deployment should always set it.
 :::
 
-#### `DISPATCH_AUTHENTICATION_PROVIDER_PKCE_JWKS_CACHE_SECONDS` \['default': 300\]
+#### `DISPATCH_AUTHENTICATION_PROVIDER_PKCE_JWKS_CACHE_SECONDS` \['default': 300\] {#dispatch_authentication_provider_pkce_jwks_cache_seconds-default-300}
 
 > How long the provider's signing keys are cached. Keys are also refetched
 > immediately when a token arrives with a key id Dispatch has not seen, so a
 > rotated signing key is picked up without waiting for this to expire.
 
-#### `DISPATCH_AUTHENTICATION_PROVIDER_PKCE_JWKS_TIMEOUT_SECONDS` \['default': 5\]
+#### `DISPATCH_AUTHENTICATION_PROVIDER_PKCE_JWKS_TIMEOUT_SECONDS` \['default': 5\] {#dispatch_authentication_provider_pkce_jwks_timeout_seconds-default-5}
 
 > Request timeout when fetching the JWKS. If the fetch fails and keys are already
 > cached, the cached keys keep being used rather than failing every request for
 > the duration of the provider's outage.
 
-#### `DISPATCH_AUTHENTICATION_PROVIDER_PKCE_LEEWAY_SECONDS` \['default': 60\]
+#### `DISPATCH_AUTHENTICATION_PROVIDER_PKCE_LEEWAY_SECONDS` \['default': 60\] {#dispatch_authentication_provider_pkce_leeway_seconds-default-60}
 
 > Clock skew tolerated when checking `exp`, `nbf` and `iat`. Set to `0` to require
 > exact agreement with the identity provider's clock.
 
-#### `DISPATCH_PKCE_DONT_VERIFY_AT_HASH` \['default': false\]
+#### `DISPATCH_PKCE_DONT_VERIFY_AT_HASH` \['default': false\] {#dispatch_pkce_dont_verify_at_hash-default-false}
 
 > Depending on what values your OIDC provider sends, you may need to set this to `true` for the Dispatch backend
 > to be able to decode the JWT token. Accepts `true`/`false` (or `1`/`0`) only;
@@ -168,25 +168,25 @@ the code-for-token exchange this flow uses, so an Entra deployment does not need
 this setting.
 :::
 
-#### `DISPATCH_AUTHENTICATION_PROVIDER_PKCE_OPEN_ID_CONNECT_URL`
+#### `DISPATCH_AUTHENTICATION_PROVIDER_PKCE_OPEN_ID_CONNECT_URL` {#dispatch_authentication_provider_pkce_open_id_connect_url}
 
 > The well-known configuration URL for your OIDC provider, without a trailing slash. Used by the Dispatch
 > Web UI to authenticate a user via Proof Key Code Exchange \(PKCE\).
 
-#### `DISPATCH_AUTHENTICATION_PROVIDER_PKCE_CLIENT_ID`
+#### `DISPATCH_AUTHENTICATION_PROVIDER_PKCE_CLIENT_ID` {#dispatch_authentication_provider_pkce_client_id}
 
 > The client id to send to the OpenID Connect endpoint.
 
-#### `DISPATCH_AUTHENTICATION_PROVIDER_USE_ID_TOKEN` \['default': false\]
+#### `DISPATCH_AUTHENTICATION_PROVIDER_USE_ID_TOKEN` \['default': false\] {#dispatch_authentication_provider_use_id_token-default-false}
 
 > Use `id_token` instead of default `access_token`. [Details](https://developer.okta.com/docs/reference/api/oidc/#tokens-and-claims)
 > Depends on the identity provider.
 
-#### Configuration for `dispatch-auth-provider-header`
+#### Configuration for `dispatch-auth-provider-header` {#configuration-for-dispatch-auth-provider-header}
 
 > Authenticate users based on HTTP request headers. Useful when Dispatch is behind a reverse proxy performing authentication.
 
-#### `DISPATCH_AUTHENTICATION_PROVIDER_HEADER_NAME` \['default': remote-user\]
+#### `DISPATCH_AUTHENTICATION_PROVIDER_HEADER_NAME` \['default': remote-user\] {#dispatch_authentication_provider_header_name-default-remote-user}
 
 :::info
 Make sure the reverse proxy strips this header from incoming requests (i.e. user-provided). Failure to do so will result in authentication bypass.
@@ -194,21 +194,21 @@ Make sure the reverse proxy strips this header from incoming requests (i.e. user
 
 > The HTTP request header to use as the user name, this value is case-insensitive.
 
-#### Configuration for `dispatch-auth-provider-aws-alb`
+#### Configuration for `dispatch-auth-provider-aws-alb` {#configuration-for-dispatch-auth-provider-aws-alb}
 
 > Authenticate users based on [AWS Application Load Balancer authenticate](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/listener-authenticate-users.html).
 
-#### `DISPATCH_AUTHENTICATION_PROVIDER_AWS_ALB_ARN`
+#### `DISPATCH_AUTHENTICATION_PROVIDER_AWS_ALB_ARN` {#dispatch_authentication_provider_aws_alb_arn}
 
 > ARN of your Load Balancer, used to validate the signer.
 > The format is `arn:aws:elasticloadbalancing:region-code:account-id:loadbalancer/app/load-balancer-name/load-balancer-id`.
 > This is required when using the `dispatch-auth-provider-aws-alb` auth provider.
 
-#### `DISPATCH_AUTHENTICATION_PROVIDER_AWS_ALB_EMAIL_CLAIM` \['default': email\]
+#### `DISPATCH_AUTHENTICATION_PROVIDER_AWS_ALB_EMAIL_CLAIM` \['default': email\] {#dispatch_authentication_provider_aws_alb_email_claim-default-email}
 
 > Override where Dispatch should find the user email in the users claims.
 
-#### `DISPATCH_AUTHENTICATION_PROVIDER_AWS_ALB_PUBLIC_KEY_CACHE_SECONDS` \['default': 300\]
+#### `DISPATCH_AUTHENTICATION_PROVIDER_AWS_ALB_PUBLIC_KEY_CACHE_SECONDS` \['default': 300\] {#dispatch_authentication_provider_aws_alb_public_key_cache_seconds-default-300}
 
 > Override how long Dispatch should cache the public key, used to validate the payload.
 
@@ -216,26 +216,26 @@ Make sure the reverse proxy strips this header from incoming requests (i.e. user
 Add a ALB listener action without authenticate for `/api/v1/{organization}/events/*` if you want plugins to be public. Plugins determine their own authentication.
 :::
 
-### Persistence
+### Persistence {#persistence}
 
-#### `DATABASE_HOSTNAME`
+#### `DATABASE_HOSTNAME` {#database_hostname}
 
 > Dispatch relies on a `Postgres` database. This hostname should point to a supported version of `Postgres` — this project tests against and deploys `18`; there is no supported upgrade path from a pre-`14` cluster.
 
-#### `DATABASE_CREDENTIALS` \[secret: True\]
+#### `DATABASE_CREDENTIALS` \[secret: True\] {#database_credentials-secret-true}
 
 > Credentials specified in `username:password` format to be used to authenticate to the `postgres` database.
 
-#### `DATABASE_NAME` \[default: 'dispatch'\]
+#### `DATABASE_NAME` \[default: 'dispatch'\] {#database_name-default-dispatch}
 
 > Allows the user to specify the database name for the `Dispatch` backend.
 
-#### `DATABASE_PORT` \[default: '5432'\]
+#### `DATABASE_PORT` \[default: '5432'\] {#database_port-default-5432}
 
 > Allows the user to specify the database port for the `Dispatch` backend.
 
-### Models
+### Models {#models}
 
-### Incident Cost
+### Incident Cost {#incident-cost}
 
 Dispatch [calculates](https://github.com/helldweller/dispatch/blob/main/src/dispatch/incident/service.py#L279) the cost of an incident by adding up the time participants have spent on each incident role \(e.g., Incident Commander\) and applying an [engagement multiplier](https://github.com/helldweller/dispatch/blob/main/src/dispatch/incident/service.py#L266) that's based on the incident role. It also includes time spent on incident review-related activities. Dispatch calculates and publishes the cost for all incidents [every 5 minutes](https://github.com/helldweller/dispatch/blob/main/src/dispatch/incident/scheduled.py#L257).

@@ -8,25 +8,25 @@ description: Configuration page for Atlassian Confluence.
 Dispatch ships with Atlassian Confluence storage and document plugins. This page describes the available configurations for the plugins.
 :::
 
-## Dispatch configuration variables for storage plugin
+## Dispatch configuration variables for storage plugin {#dispatch-configuration-variables-for-storage-plugin}
 
-### `API URL` \[Required\]
+### `API URL` \[Required\] {#api-url-required}
 
 > URL of the Confluence instance. For Cloud this is the site root, for example `https://your-site.atlassian.net/`; Dispatch appends the `/wiki` path itself, including for a site on a custom domain. For Server/Data Center this is the instance URL, including any context path it is served under.
 
-### `Hosting Type` \[Default: cloud\]
+### `Hosting Type` \[Default: cloud\] {#hosting-type-default-cloud}
 
 > Either `cloud` or `server`. Dispatch reaches Confluence Cloud over the REST v2 API and Confluence Server/Data Center over REST v1; these are different APIs, so this must match the deployment.
 
-### `Username` \[Required\]
+### `Username` \[Required\] {#username-required}
 
 > Username for accessing the confluence instance. This user should have permission to create pages in the space.
 
-### `Password` \[Required\]
+### `Password` \[Required\] {#password-required}
 
 > API token to access the confluence instance. Please refer to the [link](https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/) on creating a new API token.
 
-### `Root Incident Storage Page ID` \[Required\]
+### `Root Incident Storage Page ID` \[Required\] {#root-incident-storage-page-id-required}
 
 > Page id of the page each incident's own page is created under, found in the page URL: `/pages/<id>/<title>`.
 >
@@ -38,7 +38,7 @@ Dispatch ships with Atlassian Confluence storage and document plugins. This page
 > Earlier releases took a space key here, alongside a separate `Parent ID of the pages` field. Upgrading moves that parent page id into this field and drops the old one, so an existing instance needs no edit. Setting it by hand is the case to watch: a space key cannot be read as a page, so no incident storage is created and each attempt logs `Exception happened while creating page … under <space key>`.
 > :::
 
-### `Open On Close` \[Default: false\]
+### `Open On Close` \[Default: false\] {#open-on-close-default-false}
 
 > Controls the visibility of resources on incident close. If enabled, Dispatch will make all resources visible to the entire workspace.
 >
@@ -46,7 +46,7 @@ Dispatch ships with Atlassian Confluence storage and document plugins. This page
 > The Confluence plugin does not implement this yet; the setting is accepted and has no effect. Closing an incident logs a failure event for the attempt.
 > :::
 
-### `Readonly` \[Default: false\]
+### `Readonly` \[Default: false\] {#readonly-default-false}
 
 > The incident document will be marked as readonly on incident close. Participants will still be able to interact with the document but any other viewers will not.
 >
@@ -54,20 +54,20 @@ Dispatch ships with Atlassian Confluence storage and document plugins. This page
 > The Confluence plugin does not implement this yet, in the same way as `Open On Close` above.
 > :::
 
-## Dispatch Configuration Variables for document plugin
+## Dispatch Configuration Variables for document plugin {#dispatch-configuration-variables-for-document-plugin}
 
-### `API URL` \[Required\]
+### `API URL` \[Required\] {#api-url-required-1}
 
 > URL of the Confluence instance. For Cloud this is the site root, for example `https://your-site.atlassian.net/`; Dispatch appends the `/wiki` path itself, including for a site on a custom domain. For Server/Data Center this is the instance URL, including any context path it is served under.
 
-### `Hosting Type` \[Default: cloud\]
+### `Hosting Type` \[Default: cloud\] {#hosting-type-default-cloud-1}
 
 > Either `cloud` or `server`. Dispatch reaches Confluence Cloud over the REST v2 API and Confluence Server/Data Center over REST v1; these are different APIs, so this must match the deployment.
 
-### `Username` \[Required\]
+### `Username` \[Required\] {#username-required-1}
 
 > Username for accessing the confluence instance. This user should have permission to create pages in the space.
 
-### `Password` \[Required\]
+### `Password` \[Required\] {#password-required-1}
 
 > API token to access the confluence instance. Please refer to the [link](https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/) on creating a new API token.

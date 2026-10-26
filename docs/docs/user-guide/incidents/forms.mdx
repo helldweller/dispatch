@@ -4,11 +4,11 @@ description: How to create custom incident forms
 
 # Forms
 
-## Creating a custom form
+## Creating a custom form {#creating-a-custom-form}
 
 Within Dispatch, admins can create a custom form under Settings -> (choose Project) -> Incident / Form Types. This brings up a table of existing form types (if any). Click on the NEW button to create a new form type.
 
-### Form schema
+### Form schema {#form-schema}
 
 The form schema takes a JSON array of form objects of the following type:
 
@@ -26,11 +26,11 @@ The following fields are required for each form object: `type`, `title`, and `na
 
 Note: be sure to set the form type to "Enabled" so that it will appear in the forms tab in the incident.
 
-#### Conditionals
+#### Conditionals {#conditionals}
 
 The `if` attribute can be a complex JavaScript boolean expression. Refer to other form items using the format `$<name>` where `<name>` is the unique name identifier.
 
-##### Example
+##### Example {#example}
 
 ```
    [
@@ -40,23 +40,23 @@ The `if` attribute can be a complex JavaScript boolean expression. Refer to othe
    ]
 ```
 
-## Fill out a form in an incident
+## Fill out a form in an incident {#fill-out-a-form-in-an-incident}
 
 After an incident is opened, go to the View/Edit panel and select the Forms tab at the top. This view will list all of the forms that have been filled out so far. They can either be in the Draft or Completed state. Users can either edit an existing form or create a new one based on any of the enabled form types created as above.
 
 While a form is being completed, the user can **Cancel** to discard any changes, **Save as Draft** to save the filled in information and set as _Draft_, or **Submit** to save and set as _Completed_.
 
-## Attorney review
+## Attorney review {#attorney-review}
 
 A new tab on the left "Forms" lists all of the _Draft_ and _Completed_ forms for leadership and attorney review. For each form, users can view/edit, delete, and a special **Attorney Review** option. This option shows relevant incident details and the values filled out in the form. It also provides an attorney status dropdown and two new fields for attorney notes and open questions.
 
-## Additional attorney questions
+## Additional attorney questions {#additional-attorney-questions}
 
 If additional questions are required for the attorney team to assess the information on the form, each form type has the option of asking additional attorney questions. This schema follows the same format as the main form schema. The additional attorney questions will appear only on the Attorney Section when performing the Attorney Review from the Forms page.
 
 ![](/img/attorney-section.png)
 
-## Scoring schema
+## Scoring schema {#scoring-schema}
 
 A risk score can be calculated based on the form responses. The scoring schema is a JSON array of objects of the following type:
 

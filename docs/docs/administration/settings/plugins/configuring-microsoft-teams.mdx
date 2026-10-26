@@ -8,15 +8,15 @@ description: Configuration options for the Microsoft Teams conference plugin.
 The Microsoft Teams plugin creates a Teams online meeting to act as the incident bridge. It authenticates to Microsoft Graph with the OAuth2 client-credentials flow and creates the meeting on behalf of a nominated user. Teams meetings expire 60 days after the meeting's start or end time (extended by another 60 days if the meeting is updated or activated), so the join link stays usable for the life of an incident regardless of the configured duration.
 :::
 
-## Azure Setup
+## Azure Setup {#azure-setup}
 
 The plugin acts as an application, not as a signed-in user, so it needs an app registration with an **application** permission and a Teams policy that names the user it creates meetings for. Both halves are required — a valid token without the policy returns `403`.
 
-### 1. Register an application
+### 1. Register an application {#1-register-an-application}
 
 In the [Microsoft Entra admin center](https://entra.microsoft.com), go to **App registrations → New registration**. Note the **Application (client) ID** and the **Directory (tenant) ID**.
 
-### 2. Grant the Graph permission
+### 2. Grant the Graph permission {#2-grant-the-graph-permission}
 
 Under **API permissions**, add **Microsoft Graph → Application permissions → `OnlineMeetings.ReadWrite.All`**, then **Grant admin consent**.
 
@@ -24,11 +24,11 @@ Under **API permissions**, add **Microsoft Graph → Application permissions →
 It must be an *application* permission. Delegated permissions apply to a signed-in user and are not used by this plugin.
 :::
 
-### 3. Create a client secret
+### 3. Create a client secret {#3-create-a-client-secret}
 
 Under **Certificates & secrets → New client secret**, copy the secret **value** (not the ID). It is only shown once. Client secrets expire — set a reminder, because an expired secret surfaces as `invalid_client` in the incident timeline.
 
-### 4. Allow the application to create meetings for a user
+### 4. Allow the application to create meetings for a user {#4-allow-the-application-to-create-meetings-for-a-user}
 
 This is the step that is easy to miss. Grant the application access to the user whose calendar the meetings are created under:
 
@@ -45,35 +45,35 @@ Grant-CsApplicationAccessPolicy -PolicyName Dispatch-Conference `
 
 Policy assignment can take up to 30 minutes to take effect. See [Allow applications to access online meetings on behalf of a user](https://learn.microsoft.com/en-us/graph/cloud-communication-online-meeting-application-access-policy).
 
-## Dispatch Configuration
+## Dispatch Configuration {#dispatch-configuration}
 
 The Microsoft Teams plugin is configured in the Dispatch Web UI under Settings -> Project -> Plugins. Add the plugin using the `NEW` button and then edit its configuration by clicking on the three vertical dots.
 
-### MS team Authority URL
+### MS team Authority URL {#ms-team-authority-url}
 
 > `https://login.microsoftonline.com/<directory-tenant-id>`. Use a specific tenant; `common` and `organizations` are not supported for the client-credentials flow.
 
-### client id
+### client id {#client-id}
 
 > The Application (client) ID from step 1.
 
-### Azure Client Secret
+### Azure Client Secret {#azure-client-secret}
 
 > The client secret value from step 3.
 
-### User id
+### User id {#user-id}
 
 > The **object ID** of the user the application creates meetings on behalf of — not their email address. This must be the same user named in the application access policy in step 4.
 
-### Allow Auto Recording
+### Allow Auto Recording {#allow-auto-recording}
 
 > Enable if you would like to record the meetings by default. Defaults to disabled.
 
-### Default Meeting Duration (Minutes)
+### Default Meeting Duration (Minutes) {#default-meeting-duration-minutes}
 
 > Default duration in minutes for conference meetings. Defaults to 1440 minutes (1 day). Teams meetings stay joinable past their scheduled end, so this mainly sets when the meeting expires rather than cutting the bridge off.
 
-### Require a Meeting Passcode
+### Require a Meeting Passcode {#require-a-meeting-passcode}
 
 > Require a passcode when joining by meeting ID. Defaults to enabled.
 >
@@ -81,7 +81,7 @@ The Microsoft Teams plugin is configured in the Dispatch Web UI under Settings -
 >
 > Because the passcode is useless without the meeting ID it pairs with, Dispatch publishes both together: the conference description reads `Password: aB3dEf7h (meeting ID 123 456 789)`.
 
-## Troubleshooting
+## Troubleshooting {#troubleshooting}
 
 Failures are recorded on the incident timeline with the reason Graph gave.
 
@@ -92,11 +92,11 @@ Failures are recorded on the incident timeline with the reason Graph gave.
 | `404` on create | The **User id** is not an object ID, or the user does not exist in the tenant. |
 | `429` | Graph is throttling the application. The message carries the `Retry-After` value verbatim (Graph sends either a seconds count or an HTTP date). Dispatch does not retry — a retry on a write endpoint risks creating a second bridge for one incident. |
 
-## Limits
+## Limits {#limits}
 
 Microsoft documents a limit of **2,000 meetings per user per month** for meeting information. Because Dispatch creates every bridge under the single user configured above, that is the ceiling this plugin will reach first. Microsoft does not publish a per-second rate for `/onlineMeetings` in its service-specific throttling table; if the application is throttled, Graph answers `429` with `Retry-After` and Dispatch surfaces both on the incident timeline.
 
-## Notes
+## Notes {#notes}
 
 - `add_participant` and `remove_participant` keep the meeting's attendee list in step with the incident's participants. This is **roster metadata, not access control**: the join link works for anyone who holds it, so being added grants nothing that the published link does not already grant, and being removed neither evicts a participant from a meeting in progress nor invalidates the link. Attendees are added with the `attendee` role — Microsoft does not support assigning `presenter` or `coorganizer` to identities Entra cannot resolve, and responders may be external.
 - Graph replaces the whole attendee list on every update, so Dispatch reads the meeting before each change and resends the existing attendees unchanged. A failure is recorded on the incident timeline and does not interrupt adding or removing the participant everywhere else.
@@ -106,7 +106,7 @@ Microsoft documents a limit of **2,000 meetings per user per month** for meeting
 - The meeting is created with an initial attendee roster: the responders resolved for the incident, minus anyone who has turned off **Add me automatically to incident bridges** in their own settings. Same list, same `attendee` role and same caveats as `add_participant` above — it is created in one request rather than added afterwards, so a roster Graph rejects fails the create instead of leaving a meeting Dispatch has no record of. An incident with no such responders gets a meeting with no attendees, which is not an error.
 - `description` is accepted by the plugin and unused: an `onlineMeeting` has no agenda field.
 
-## Upgrading
+## Upgrading {#upgrading}
 
 Before the fixes in [Jamyn/dispatch#81](https://github.com/Jamyn/dispatch/issues/81) this plugin could not authenticate at all — it passed a string where MSAL requires a list of scopes, so every attempt raised before reaching Graph and was swallowed. Any existing deployment was therefore producing no bridges, and there is no prior working behaviour to preserve. Two things nonetheless differ from what the old code *attempted*:
 

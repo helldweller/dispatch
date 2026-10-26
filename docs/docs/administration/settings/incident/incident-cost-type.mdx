@@ -18,7 +18,7 @@ Dispatch allows you to define incident cost types. These types can then be used 
 
 **Editable:** Whether this cost type can be edited or not.
 
-### Calculating Incident Cost
+### Calculating Incident Cost {#calculating-incident-cost}
 
 Dispatch [calculates](https://github.com/helldweller/dispatch/blob/main/src/dispatch/incident/service.py#L279) the cost of an incident by adding up the time participants have spent on each incident role \(e.g., Incident Commander\) and applying an [engagement multiplier](https://github.com/helldweller/dispatch/blob/main/src/dispatch/incident/service.py#L266) that's based on the incident role. It also includes time spent on incident review-related activities. Dispatch calculates and publishes the cost for all incidents [every 5 minutes](https://github.com/helldweller/dispatch/blob/main/src/dispatch/incident/scheduled.py#L257).
 
