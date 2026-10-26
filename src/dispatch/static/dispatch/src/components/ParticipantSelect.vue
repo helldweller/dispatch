@@ -73,8 +73,6 @@ export default {
     let total = ref(0)
     const search = ref(props.initialValue.name)
 
-    let debouncedGetIndividualData = null
-
     const getIndividualData = async (searchVal, page = currentPage.value) => {
       loading.value = true
       let filterOptions = {
@@ -115,8 +113,11 @@ export default {
       loading.value = false
     }
 
+    // Created here, not in onMounted: v-autocomplete syncs its search model while
+    // it mounts, so the watcher below can run before the parent's onMounted hook.
+    const debouncedGetIndividualData = debounce(getIndividualData, 300)
+
     onMounted(() => {
-      debouncedGetIndividualData = debounce(getIndividualData, 300)
       debouncedGetIndividualData(search.value)
     })
 
